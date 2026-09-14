@@ -1,0 +1,16 @@
+{
+  "name": "@prabhix/web-kit",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Shared brand, UI, and OIDC packages for Prabhix product webs.",
+  "workspaces": [
+    "packages/brand",
+    "packages/ui",
+    "packages/oidc-client"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}

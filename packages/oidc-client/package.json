@@ -1,0 +1,22 @@
+{
+  "name": "@prabhix/oidc-client",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Browser PKCE client for Prabhix Identity.",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "5.8.3"
+  }
+}
