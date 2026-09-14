@@ -153,6 +153,24 @@ export class OidcClient {
   }
 
   /**
+   * Same as {@link beginLogin}, but asks the provider not to show a page.
+   *
+   * <p>The Identity session cookie is SameSite=Lax on the issuer origin, so an XHR from this
+   * product cannot see it. A top-level redirect to {@code /authorize?prompt=none} can. If the
+   * person is already signed in, a code comes back immediately. If they are not, the provider
+   * returns {@code login_required} to the callback instead of the hosted login page — which is
+   * how a product welcome screen stays reserved for people who actually need to sign in.
+   */
+  beginSilentLogin(returnTo?: string): Promise<void> {
+    return this.authorize(returnTo, "none");
+  }
+
+  /** Drops PKCE keys from a silent attempt that came back as {@code login_required}. */
+  abandonAuthorize(): void {
+    this.clearAuthorize();
+  }
+
+  /**
    * Sends the browser to the hosted signup page, the long way round.
    *
    * <p>Through `/authorize` with `prompt=create` rather than straight to the signup URL, because the
@@ -182,6 +200,10 @@ export class OidcClient {
   async handleCallback(search: URLSearchParams): Promise<{ tokens: OidcTokens; returnTo: string }> {
     const error = search.get("error");
     if (error) {
+      this.clearAuthorize();
+      if (isSilentLoginErrorCode(error)) {
+        throw new SilentLoginError(error, search.get("error_description"));
+      }
       throw new Error(search.get("error_description") ?? this.describeError(error));
     }
 
@@ -306,6 +328,12 @@ export class OidcClient {
 
     window.location.assign(`${this.issuer}/oauth2/authorize?${params.toString()}`);
   }
+
+  private clearAuthorize(): void {
+    sessionStorage.removeItem(this.keys.verifier);
+    sessionStorage.removeItem(this.keys.state);
+    sessionStorage.removeItem(this.keys.returnTo);
+  }
 }
 
 let defaultClient: OidcClient | null = null;
@@ -342,6 +370,14 @@ export function beginLogin(returnTo?: string): Promise<void> {
   return client().beginLogin(returnTo);
 }
 
+export function beginSilentLogin(returnTo?: string): Promise<void> {
+  return client().beginSilentLogin(returnTo);
+}
+
+export function abandonAuthorize(): void {
+  client().abandonAuthorize();
+}
+
 export function beginSignup(returnTo?: string): Promise<void> {
   return client().beginSignup(returnTo);
 }
@@ -360,6 +396,32 @@ export function rememberIdToken(value?: string): void {
 
 export function beginLogout(idTokenHint?: string): void {
   client().beginLogout(idTokenHint);
+}
+
+/** OIDC errors that mean "nobody is signed in", not that the client is broken. */
+const SILENT_LOGIN_ERROR_CODES = new Set([
+  "login_required",
+  "interaction_required",
+  "consent_required",
+  "account_selection_required",
+]);
+
+export class SilentLoginError extends Error {
+  readonly code: string;
+
+  constructor(code: string, description?: string | null) {
+    super(description || "Sign-in is required.");
+    this.name = "SilentLoginError";
+    this.code = code;
+  }
+}
+
+export function isSilentLoginError(error: unknown): error is SilentLoginError {
+  return error instanceof SilentLoginError;
+}
+
+function isSilentLoginErrorCode(code: string): boolean {
+  return SILENT_LOGIN_ERROR_CODES.has(code);
 }
 
 function randomUrlSafe(bytes: number): string {
