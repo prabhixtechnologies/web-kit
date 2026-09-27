@@ -129,6 +129,36 @@ function auditTags() {
   return failures;
 }
 
+// The categorical palette is hand-picked, unlike the tag swatches, and nothing was
+// checking it. That is how `--px-cat-8` shipped at 2.60:1 against white: a chart series
+// nobody could see, in a palette whose whole job is telling series apart.
+//
+// 3:1 is the floor here, not 4.5:1. A series colour is a stroke, a fill or a legend
+// swatch, which WCAG 1.4.11 treats as non-text. Anything that puts a cat colour on actual
+// body text is misusing it. Every light surface in every theme is checked, not just the
+// theme's own, because a chart can sit on `surface`, `bg` or a raised card, and
+// `surface-raised` is pure white - the harshest of the three.
+function auditCategorical() {
+  const failures = [];
+  for (const mode of ["light", "dark"]) {
+    const surfaces = new Set();
+    for (const themeName of themeNames) {
+      const m = roleMap(themeName, mode);
+      for (const role of ["bg", "surface", "surface-raised"]) surfaces.add(m[role]);
+    }
+    T.palette.categorical[mode].forEach((hex, i) => {
+      for (const bg of surfaces) {
+        const ratio = contrast(hex, bg);
+        if (ratio < 3)
+          failures.push(
+            `categorical/${mode}: cat-${i + 1} ${hex} on ${bg} = ${ratio.toFixed(2)}:1 (needs 3:1)`,
+          );
+      }
+    });
+  }
+  return failures;
+}
+
 function buildCss() {
   const L = [BANNER("prabhix-tokens.css"), ""];
 
@@ -551,7 +581,8 @@ for (const [path, body] of artifacts) {
 }
 
 const tagFailures = auditTags();
-const allFailures = [...audit.failures, ...tagFailures];
+const catFailures = auditCategorical();
+const allFailures = [...audit.failures, ...tagFailures, ...catFailures];
 if (allFailures.length) {
   console.error(`\ncontrast gate failed — ${allFailures.length} pair(s) below WCAG AA:\n`);
   for (const f of allFailures) console.error(`  ${f}`);
@@ -559,7 +590,8 @@ if (allFailures.length) {
 }
 console.log(
   `\ncontrast gate passed — ${audit.rows.length} role assertions across ${themeNames.length} themes x 2 modes, ` +
-    `plus ${T.palette.tag.ramps.length * 2} tag swatches`,
+    `plus ${T.palette.tag.ramps.length * 2} tag swatches ` +
+    `and ${T.palette.categorical.light.length * 2} series colours against every surface`,
 );
 
 if (drift) {
