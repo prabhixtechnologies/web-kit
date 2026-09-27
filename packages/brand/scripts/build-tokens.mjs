@@ -524,6 +524,12 @@ const artifacts = [
   [join(pkg, "tailwind-preset.css"), buildPreset()],
   [join(pkg, "TOKENS.md"), buildDoc(audit)],
   [join(repo, "Mobile/packages/prabhix_theme/lib/src/prabhix_tokens.dart"), buildDart()],
+  // Emitted into both packages on purpose. `brand` is where it belongs, because a tag
+  // swatch is a token and every web app already depends on brand; `ui` gets a copy so it
+  // stays installable without a nested file: dependency, which npm resolves from the
+  // registry when a consuming app links ui by path. Two generated copies of one function
+  // cannot drift; a hand-maintained re-export across a package boundary would.
+  [join(repo, "web-kit/packages/brand/src/tags.ts"), buildTagsTs()],
   [join(repo, "web-kit/packages/ui/src/tags.ts"), buildTagsTs()],
   [join(repo, "Infra/design/prabhix-tokens.css"), buildCss()],
   [join(repo, "Identity/src/main/resources/static/assets/prabhix-tokens.css"), buildCss()],
