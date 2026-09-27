@@ -14,6 +14,7 @@
     "src"
   ],
   "scripts": {
+    "test": "node --experimental-strip-types --test src/index.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

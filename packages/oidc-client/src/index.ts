@@ -60,6 +60,36 @@ const DEFAULT_KEYS: OidcStorageKeys = {
 /**
  * Paths remembered across the Identity redirect must stay inside this app.
  */
+/** Propagates security-cutover vs expiry into product login routes. */
+export type OidcSignInReason = "session" | "expired" | "security";
+
+export function mapApiSignInReason(code: string | null | undefined): OidcSignInReason | undefined {
+  switch ((code ?? "").toUpperCase()) {
+    case "SESSION_REPLACED":
+    case "TOKEN_REVOKED":
+      return "security";
+    case "TOKEN_EXPIRED":
+    case "UNAUTHENTICATED":
+      return "expired";
+    default:
+      return undefined;
+  }
+}
+
+/** Hosted Identity logout when no id token is available (GET confirmation page). */
+export function identityHostedLogoutUrl(issuer: string): string {
+  return `${(issuer ?? "").replace(/\/+$/, "")}/logout`;
+}
+
+export function loginPathWithReason(path: string, reason?: OidcSignInReason, fallback = "/login"): string {
+  const base = safeAppPath(path, fallback);
+  if (!reason) {
+    return base;
+  }
+  const join = base.includes("?") ? "&" : "?";
+  return `${base}${join}reason=${encodeURIComponent(reason)}`;
+}
+
 export function safeAppPath(path: string | null | undefined, fallback = "/"): string {
   if (!path) {
     return fallback;
@@ -150,6 +180,11 @@ export class OidcClient {
    */
   beginLogin(returnTo?: string): Promise<void> {
     return this.authorize(returnTo);
+  }
+
+  /** Forces Identity to show credentials again so an invite can be accepted with another account. */
+  beginAccountSwitch(returnTo?: string): Promise<void> {
+    return this.authorize(returnTo, "login");
   }
 
   /**
@@ -286,23 +321,52 @@ export class OidcClient {
     sessionStorage.removeItem(this.keys.idToken);
 
     if (hint) {
+      const postLogoutRedirectUri = resolveUrl(
+        this.postLogoutRedirectUriOption,
+        () => `${window.location.origin}/`,
+      );
+      if (this.postLogoutViaForm()) {
+        this.submitLogoutForm(`${this.issuer}/connect/logout`, {
+          client_id: this.clientId,
+          id_token_hint: hint,
+          post_logout_redirect_uri: postLogoutRedirectUri,
+        });
+        return;
+      }
       const params = new URLSearchParams({
         client_id: this.clientId,
         id_token_hint: hint,
-        // Only sent alongside a hint. The provider validates it against the hint's client, so on its own
-        // it is rejected — and being bounced back here would look like a sign-out that did nothing.
-        post_logout_redirect_uri: resolveUrl(
-          this.postLogoutRedirectUriOption,
-          () => `${window.location.origin}/`,
-        ),
+        post_logout_redirect_uri: postLogoutRedirectUri,
       });
       window.location.assign(`${this.issuer}/connect/logout?${params.toString()}`);
       return;
     }
 
-    // No hint (reload wiped sessionStorage, or SSO arrived via another product's cookie). Hosted
-    // /logout still clears the Identity session cookie; /connect/logout without a hint is 400.
-    window.location.assign(`${this.issuer}/logout`);
+    // Without an id token the provider cannot perform RP-initiated logout. Open Identity's hosted
+    // confirmation page instead: GET never signs the user out, and the page supplies the CSRF token
+    // for its explicit POST. Posting cross-origin from this product cannot safely know that token.
+    window.location.assign(identityHostedLogoutUrl(this.issuer));
+  }
+
+  /** The OIDC end-session endpoint accepts a standards-defined form POST when an id token exists. */
+  protected postLogoutViaForm(): boolean {
+    return typeof document !== "undefined" && typeof document.body !== "undefined";
+  }
+
+  protected submitLogoutForm(action: string, fields: Record<string, string>): void {
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = action;
+    form.style.display = "none";
+    for (const [name, value] of Object.entries(fields)) {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    }
+    document.body.appendChild(form);
+    form.submit();
   }
 
   private async authorize(returnTo?: string, prompt?: string): Promise<void> {
@@ -368,6 +432,10 @@ export function idToken(): string | null {
 
 export function beginLogin(returnTo?: string): Promise<void> {
   return client().beginLogin(returnTo);
+}
+
+export function beginAccountSwitch(returnTo?: string): Promise<void> {
+  return client().beginAccountSwitch(returnTo);
 }
 
 export function beginSilentLogin(returnTo?: string): Promise<void> {
