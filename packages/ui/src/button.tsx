@@ -9,17 +9,33 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary-strong",
-        destructive: "bg-destructive text-white hover:bg-destructive/90",
-        outline: "border border-border bg-surface hover:bg-surface-muted",
+        // `text-white` was wrong rather than merely hardcoded: the danger ramp is chosen
+        // per theme, and its readable foreground is asserted against it at build time.
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        // The only variant that uses both of the product's accents. This is the primary
+        // call to action on marketing surfaces and empty states — the place where a flat
+        // fill reads as unfinished.
+        brand:
+          "bg-[image:var(--px-gradient-brand)] text-primary-foreground hover:brightness-110",
+        outline:
+          "border border-border-strong bg-surface hover:bg-surface-muted hover:border-primary",
         secondary: "bg-surface-muted text-text hover:bg-surface-muted/80",
         ghost: "hover:bg-surface-muted",
         link: "text-primary underline-offset-4 hover:underline",
       },
+      // All three sizes used to be min-h-11, so `sm` and `lg` changed nothing but the
+      // padding. 44px stays the default because it is the AAA pointer target (WCAG 2.5.5)
+      // and these consoles are used on tablets at a counter. `sm` and `xs` exist for
+      // toolbars and table rows, and stop at 32px — comfortably above the 24px AA floor
+      // (WCAG 2.5.8), which is the number that actually must not be crossed.
       size: {
         default: "min-h-11 px-4 py-2",
-        sm: "min-h-11 rounded-lg px-3 text-xs",
-        lg: "min-h-11 rounded-lg px-8",
+        xs: "min-h-8 rounded-md px-2 text-xs",
+        sm: "min-h-9 rounded-lg px-3 text-xs",
+        lg: "min-h-12 rounded-lg px-8 text-base",
         icon: "size-11",
+        "icon-sm": "size-9",
       },
     },
     defaultVariants: { variant: "default", size: "default" },

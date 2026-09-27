@@ -478,6 +478,36 @@ function buildDoc(audit) {
   return L.join("\n");
 }
 
+// The tag tone list and the seed-to-swatch rule, emitted for TypeScript as well as Dart.
+// Both sides have to agree or the same sender is one colour in the browser and another in
+// the app, so neither side gets to keep its own copy of the order.
+function buildTagsTs() {
+  const L = [BANNER("tags.ts").trimEnd(), ""];
+  L.push("/** The generated tag tones, in palette order. Index 0 is the neutral 'no category' swatch. */");
+  L.push("export const TAG_TONES = [");
+  for (const n of T.palette.tag.ramps) L.push(`  "${n}",`);
+  L.push("] as const;");
+  L.push("");
+  L.push("export type TagTone = (typeof TAG_TONES)[number];");
+  L.push("");
+  L.push("/**");
+  L.push(" * Picks a stable swatch for a piece of text: a sender, a label, a tenant. The same");
+  L.push(" * name is always the same colour, without storing a colour per record.");
+  L.push(" *");
+  L.push(" * Must stay identical to `pxTagFor` in prabhix_tokens.dart.");
+  L.push(" */");
+  L.push("export function toneFor(seed: string): TagTone {");
+  L.push("  let hash = 0;");
+  L.push("  for (let i = 0; i < seed.length; i += 1) {");
+  L.push("    hash = (hash * 31 + seed.charCodeAt(i)) & 0x1fffffff;");
+  L.push("  }");
+  L.push("  // Skips index 0, the neutral swatch, which is reserved for 'no category'.");
+  L.push("  return TAG_TONES[1 + (hash % (TAG_TONES.length - 1))];");
+  L.push("}");
+  L.push("");
+  return L.join("\n");
+}
+
 /* ---------- helpers ---------- */
 
 function kebab(s) { return s.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase()); }
@@ -494,6 +524,7 @@ const artifacts = [
   [join(pkg, "tailwind-preset.css"), buildPreset()],
   [join(pkg, "TOKENS.md"), buildDoc(audit)],
   [join(repo, "Mobile/packages/prabhix_theme/lib/src/prabhix_tokens.dart"), buildDart()],
+  [join(repo, "web-kit/packages/ui/src/tags.ts"), buildTagsTs()],
   [join(repo, "Infra/design/prabhix-tokens.css"), buildCss()],
   [join(repo, "Identity/src/main/resources/static/assets/prabhix-tokens.css"), buildCss()],
 ];

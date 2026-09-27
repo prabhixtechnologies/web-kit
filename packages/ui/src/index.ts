@@ -1,8 +1,33 @@
 export { cn } from "./cn";
 export { cva, type VariantProps } from "class-variance-authority";
 
+export {
+  RowActions,
+  RowActionsTrigger,
+  type RowAction,
+  type RowActionsProps,
+  type ActionRisk,
+} from "./actions";
 export { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 export { Badge, badgeVariants, type BadgeProps } from "./badge";
+export {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuCheckboxItem,
+  ContextMenuRadioItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuGroup,
+  ContextMenuPortal,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuRadioGroup,
+} from "./context-menu";
+export { TAG_TONES, toneFor, type TagTone } from "./tags";
 export { Button, buttonVariants, type ButtonProps } from "./button";
 export { Checkbox } from "./checkbox";
 export {

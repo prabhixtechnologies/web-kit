@@ -14,9 +14,15 @@ const Switch = React.forwardRef<
     {...props}
     ref={ref}
   >
+    {/*
+      The thumb was `bg-white`, which disappeared when the switch was off: the unchecked
+      track is `surface-muted`, which is near-white in every light theme. It now takes the
+      surface colour with a border, so the thumb has an edge against both the muted track
+      and the accent fill.
+    */}
     <SwitchPrimitives.Thumb
       className={cn(
-        "pointer-events-none block h-4 w-4 rounded-full bg-white shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0",
+        "pointer-events-none block h-4 w-4 rounded-full border border-border-strong bg-surface shadow-lg ring-0 transition-transform motion-reduce:transition-none data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0",
       )}
     />
   </SwitchPrimitives.Root>
