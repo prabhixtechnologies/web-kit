@@ -1,0 +1,258 @@
+# Design tokens — generated reference
+
+Generated from `tokens.json`. Do not edit. The contract these serve is
+[UX-STANDARD.md](../../../Infra/docs/UX-STANDARD.md).
+
+## Product themes
+
+| Theme | `data-brand` | Accent ramp | Surface neutral | Default density |
+|---|---|---|---|---|
+| Prabhix Technologies | `technologies` | cyan | neutral | comfortable |
+| OneOps | `oneops` | indigo | neutral | comfortable |
+| Admin console | `admin` | violet | neutral | compact |
+| MobiStack | `mobistack` | ochre | sand | compact |
+| Mailroom | `mailroom` | clay | sand | comfortable |
+
+Selecting a theme is one attribute on `<html>`:
+
+```html
+<html data-brand="mobistack" data-theme="dark" data-density="compact">
+```
+
+## Contrast audit — 230 assertions, 0 failing
+
+| Theme | Mode | Foreground | Background | Ratio | Min | |
+|---|---|---|---|---:|---:|---|
+| technologies | light | `ink` #0c1524 | `bg` #eef2f7 | 16.27 | 4.5 | pass |
+| technologies | light | `ink` #0c1524 | `surface` #f6f8fb | 17.19 | 4.5 | pass |
+| technologies | light | `ink-muted` #56687e | `bg` #eef2f7 | 5.08 | 4.5 | pass |
+| technologies | light | `ink-muted` #56687e | `surface` #f6f8fb | 5.37 | 4.5 | pass |
+| technologies | light | `ink-faint` #71859d | `surface` #f6f8fb | 3.56 | 3 | pass |
+| technologies | light | `accent` #0e7490 | `surface` #f6f8fb | 5.04 | 4.5 | pass |
+| technologies | light | `accent-ink` #ffffff | `accent` #0e7490 | 5.36 | 4.5 | pass |
+| technologies | light | `accent-subtle-ink` #155e75 | `accent-subtle` #ecfeff | 6.99 | 4.5 | pass |
+| technologies | light | `accent-2` #4338ca | `surface` #f6f8fb | 7.43 | 3 | pass |
+| technologies | light | `accent-2-ink` #ffffff | `accent-2` #4338ca | 7.90 | 4.5 | pass |
+| technologies | light | `accent-2-subtle-ink` #3730a3 | `accent-2-subtle` #eef2ff | 8.88 | 4.5 | pass |
+| technologies | light | `success` #027a48 | `surface` #f6f8fb | 5.09 | 4.5 | pass |
+| technologies | light | `success-subtle-ink` #05603a | `success-subtle` #ecfdf3 | 7.26 | 4.5 | pass |
+| technologies | light | `warning-subtle-ink` #854d0e | `warning-subtle` #fefce8 | 6.62 | 4.5 | pass |
+| technologies | light | `danger` #b42318 | `surface` #f6f8fb | 6.18 | 4.5 | pass |
+| technologies | light | `danger-ink` #ffffff | `danger` #b42318 | 6.57 | 4.5 | pass |
+| technologies | light | `danger-subtle-ink` #912018 | `danger-subtle` #fef3f2 | 7.97 | 4.5 | pass |
+| technologies | light | `info` #1d4ed8 | `surface` #f6f8fb | 6.30 | 4.5 | pass |
+| technologies | light | `info-subtle-ink` #1e40af | `info-subtle` #eff6ff | 8.01 | 4.5 | pass |
+| technologies | light | `border-strong` #71859d | `surface` #f6f8fb | 3.56 | 3 | pass |
+| technologies | light | `border-strong` #71859d | `bg` #eef2f7 | 3.37 | 3 | pass |
+| technologies | light | `focus` #0e7490 | `surface` #f6f8fb | 5.04 | 3 | pass |
+| technologies | light | `focus` #0e7490 | `bg` #eef2f7 | 4.77 | 3 | pass |
+| technologies | dark | `ink` #f6f8fb | `bg` #0c1524 | 17.19 | 4.5 | pass |
+| technologies | dark | `ink` #f6f8fb | `surface` #1a2532 | 14.57 | 4.5 | pass |
+| technologies | dark | `ink-muted` #9aabc0 | `bg` #0c1524 | 7.80 | 4.5 | pass |
+| technologies | dark | `ink-muted` #9aabc0 | `surface` #1a2532 | 6.61 | 4.5 | pass |
+| technologies | dark | `ink-faint` #71859d | `surface` #1a2532 | 4.09 | 3 | pass |
+| technologies | dark | `accent` #22d3ee | `surface` #1a2532 | 8.58 | 4.5 | pass |
+| technologies | dark | `accent-ink` #083344 | `accent` #22d3ee | 7.41 | 4.5 | pass |
+| technologies | dark | `accent-subtle-ink` #67e8f9 | `accent-subtle` #083344 | 9.24 | 4.5 | pass |
+| technologies | dark | `accent-2` #818cf8 | `surface` #1a2532 | 5.20 | 3 | pass |
+| technologies | dark | `accent-2-ink` #1e1b4b | `accent-2` #818cf8 | 5.36 | 4.5 | pass |
+| technologies | dark | `accent-2-subtle-ink` #a5b4fc | `accent-2-subtle` #1e1b4b | 8.02 | 4.5 | pass |
+| technologies | dark | `success` #32d583 | `surface` #1a2532 | 8.11 | 4.5 | pass |
+| technologies | dark | `success-subtle-ink` #6ce9a6 | `success-subtle` #053321 | 9.22 | 4.5 | pass |
+| technologies | dark | `warning-subtle-ink` #fde047 | `warning-subtle` #422006 | 11.06 | 4.5 | pass |
+| technologies | dark | `danger` #f97066 | `surface` #1a2532 | 5.56 | 4.5 | pass |
+| technologies | dark | `danger-ink` #55160c | `danger` #f97066 | 5.00 | 4.5 | pass |
+| technologies | dark | `danger-subtle-ink` #fda29b | `danger-subtle` #55160c | 7.18 | 4.5 | pass |
+| technologies | dark | `info` #60a5fa | `surface` #1a2532 | 6.10 | 4.5 | pass |
+| technologies | dark | `info-subtle-ink` #93c5fd | `info-subtle` #172554 | 8.15 | 4.5 | pass |
+| technologies | dark | `border-strong` #71859d | `surface` #1a2532 | 4.09 | 3 | pass |
+| technologies | dark | `border-strong` #71859d | `bg` #0c1524 | 4.83 | 3 | pass |
+| technologies | dark | `focus` #67e8f9 | `surface` #1a2532 | 10.69 | 3 | pass |
+| technologies | dark | `focus` #67e8f9 | `bg` #0c1524 | 12.62 | 3 | pass |
+| oneops | light | `ink` #0c1524 | `bg` #eef2f7 | 16.27 | 4.5 | pass |
+| oneops | light | `ink` #0c1524 | `surface` #f6f8fb | 17.19 | 4.5 | pass |
+| oneops | light | `ink-muted` #56687e | `bg` #eef2f7 | 5.08 | 4.5 | pass |
+| oneops | light | `ink-muted` #56687e | `surface` #f6f8fb | 5.37 | 4.5 | pass |
+| oneops | light | `ink-faint` #71859d | `surface` #f6f8fb | 3.56 | 3 | pass |
+| oneops | light | `accent` #4338ca | `surface` #f6f8fb | 7.43 | 4.5 | pass |
+| oneops | light | `accent-ink` #ffffff | `accent` #4338ca | 7.90 | 4.5 | pass |
+| oneops | light | `accent-subtle-ink` #3730a3 | `accent-subtle` #eef2ff | 8.88 | 4.5 | pass |
+| oneops | light | `accent-2` #a21caf | `surface` #f6f8fb | 5.94 | 3 | pass |
+| oneops | light | `accent-2-ink` #ffffff | `accent-2` #a21caf | 6.32 | 4.5 | pass |
+| oneops | light | `accent-2-subtle-ink` #86198f | `accent-2-subtle` #fdf4ff | 7.67 | 4.5 | pass |
+| oneops | light | `success` #027a48 | `surface` #f6f8fb | 5.09 | 4.5 | pass |
+| oneops | light | `success-subtle-ink` #05603a | `success-subtle` #ecfdf3 | 7.26 | 4.5 | pass |
+| oneops | light | `warning-subtle-ink` #854d0e | `warning-subtle` #fefce8 | 6.62 | 4.5 | pass |
+| oneops | light | `danger` #b42318 | `surface` #f6f8fb | 6.18 | 4.5 | pass |
+| oneops | light | `danger-ink` #ffffff | `danger` #b42318 | 6.57 | 4.5 | pass |
+| oneops | light | `danger-subtle-ink` #912018 | `danger-subtle` #fef3f2 | 7.97 | 4.5 | pass |
+| oneops | light | `info` #1d4ed8 | `surface` #f6f8fb | 6.30 | 4.5 | pass |
+| oneops | light | `info-subtle-ink` #1e40af | `info-subtle` #eff6ff | 8.01 | 4.5 | pass |
+| oneops | light | `border-strong` #71859d | `surface` #f6f8fb | 3.56 | 3 | pass |
+| oneops | light | `border-strong` #71859d | `bg` #eef2f7 | 3.37 | 3 | pass |
+| oneops | light | `focus` #4338ca | `surface` #f6f8fb | 7.43 | 3 | pass |
+| oneops | light | `focus` #4338ca | `bg` #eef2f7 | 7.03 | 3 | pass |
+| oneops | dark | `ink` #f6f8fb | `bg` #0c1524 | 17.19 | 4.5 | pass |
+| oneops | dark | `ink` #f6f8fb | `surface` #1a2532 | 14.57 | 4.5 | pass |
+| oneops | dark | `ink-muted` #9aabc0 | `bg` #0c1524 | 7.80 | 4.5 | pass |
+| oneops | dark | `ink-muted` #9aabc0 | `surface` #1a2532 | 6.61 | 4.5 | pass |
+| oneops | dark | `ink-faint` #71859d | `surface` #1a2532 | 4.09 | 3 | pass |
+| oneops | dark | `accent` #818cf8 | `surface` #1a2532 | 5.20 | 4.5 | pass |
+| oneops | dark | `accent-ink` #1e1b4b | `accent` #818cf8 | 5.36 | 4.5 | pass |
+| oneops | dark | `accent-subtle-ink` #a5b4fc | `accent-subtle` #1e1b4b | 8.02 | 4.5 | pass |
+| oneops | dark | `accent-2` #e879f9 | `surface` #1a2532 | 6.30 | 3 | pass |
+| oneops | dark | `accent-2-ink` #4a044e | `accent-2` #e879f9 | 6.02 | 4.5 | pass |
+| oneops | dark | `accent-2-subtle-ink` #f0abfc | `accent-2-subtle` #4a044e | 8.41 | 4.5 | pass |
+| oneops | dark | `success` #32d583 | `surface` #1a2532 | 8.11 | 4.5 | pass |
+| oneops | dark | `success-subtle-ink` #6ce9a6 | `success-subtle` #053321 | 9.22 | 4.5 | pass |
+| oneops | dark | `warning-subtle-ink` #fde047 | `warning-subtle` #422006 | 11.06 | 4.5 | pass |
+| oneops | dark | `danger` #f97066 | `surface` #1a2532 | 5.56 | 4.5 | pass |
+| oneops | dark | `danger-ink` #55160c | `danger` #f97066 | 5.00 | 4.5 | pass |
+| oneops | dark | `danger-subtle-ink` #fda29b | `danger-subtle` #55160c | 7.18 | 4.5 | pass |
+| oneops | dark | `info` #60a5fa | `surface` #1a2532 | 6.10 | 4.5 | pass |
+| oneops | dark | `info-subtle-ink` #93c5fd | `info-subtle` #172554 | 8.15 | 4.5 | pass |
+| oneops | dark | `border-strong` #71859d | `surface` #1a2532 | 4.09 | 3 | pass |
+| oneops | dark | `border-strong` #71859d | `bg` #0c1524 | 4.83 | 3 | pass |
+| oneops | dark | `focus` #a5b4fc | `surface` #1a2532 | 7.78 | 3 | pass |
+| oneops | dark | `focus` #a5b4fc | `bg` #0c1524 | 9.17 | 3 | pass |
+| admin | light | `ink` #0c1524 | `bg` #eef2f7 | 16.27 | 4.5 | pass |
+| admin | light | `ink` #0c1524 | `surface` #f6f8fb | 17.19 | 4.5 | pass |
+| admin | light | `ink-muted` #56687e | `bg` #eef2f7 | 5.08 | 4.5 | pass |
+| admin | light | `ink-muted` #56687e | `surface` #f6f8fb | 5.37 | 4.5 | pass |
+| admin | light | `ink-faint` #71859d | `surface` #f6f8fb | 3.56 | 3 | pass |
+| admin | light | `accent` #6d28d9 | `surface` #f6f8fb | 6.68 | 4.5 | pass |
+| admin | light | `accent-ink` #ffffff | `accent` #6d28d9 | 7.10 | 4.5 | pass |
+| admin | light | `accent-subtle-ink` #5b21b6 | `accent-subtle` #f5f3ff | 8.19 | 4.5 | pass |
+| admin | light | `accent-2` #0e7490 | `surface` #f6f8fb | 5.04 | 3 | pass |
+| admin | light | `accent-2-ink` #ffffff | `accent-2` #0e7490 | 5.36 | 4.5 | pass |
+| admin | light | `accent-2-subtle-ink` #155e75 | `accent-2-subtle` #ecfeff | 6.99 | 4.5 | pass |
+| admin | light | `success` #027a48 | `surface` #f6f8fb | 5.09 | 4.5 | pass |
+| admin | light | `success-subtle-ink` #05603a | `success-subtle` #ecfdf3 | 7.26 | 4.5 | pass |
+| admin | light | `warning-subtle-ink` #854d0e | `warning-subtle` #fefce8 | 6.62 | 4.5 | pass |
+| admin | light | `danger` #b42318 | `surface` #f6f8fb | 6.18 | 4.5 | pass |
+| admin | light | `danger-ink` #ffffff | `danger` #b42318 | 6.57 | 4.5 | pass |
+| admin | light | `danger-subtle-ink` #912018 | `danger-subtle` #fef3f2 | 7.97 | 4.5 | pass |
+| admin | light | `info` #1d4ed8 | `surface` #f6f8fb | 6.30 | 4.5 | pass |
+| admin | light | `info-subtle-ink` #1e40af | `info-subtle` #eff6ff | 8.01 | 4.5 | pass |
+| admin | light | `border-strong` #71859d | `surface` #f6f8fb | 3.56 | 3 | pass |
+| admin | light | `border-strong` #71859d | `bg` #eef2f7 | 3.37 | 3 | pass |
+| admin | light | `focus` #6d28d9 | `surface` #f6f8fb | 6.68 | 3 | pass |
+| admin | light | `focus` #6d28d9 | `bg` #eef2f7 | 6.32 | 3 | pass |
+| admin | dark | `ink` #f6f8fb | `bg` #0c1524 | 17.19 | 4.5 | pass |
+| admin | dark | `ink` #f6f8fb | `surface` #1a2532 | 14.57 | 4.5 | pass |
+| admin | dark | `ink-muted` #9aabc0 | `bg` #0c1524 | 7.80 | 4.5 | pass |
+| admin | dark | `ink-muted` #9aabc0 | `surface` #1a2532 | 6.61 | 4.5 | pass |
+| admin | dark | `ink-faint` #71859d | `surface` #1a2532 | 4.09 | 3 | pass |
+| admin | dark | `accent` #a78bfa | `surface` #1a2532 | 5.70 | 4.5 | pass |
+| admin | dark | `accent-ink` #2e1065 | `accent` #a78bfa | 5.60 | 4.5 | pass |
+| admin | dark | `accent-subtle-ink` #c4b5fd | `accent-subtle` #2e1065 | 8.25 | 4.5 | pass |
+| admin | dark | `accent-2` #22d3ee | `surface` #1a2532 | 8.58 | 3 | pass |
+| admin | dark | `accent-2-ink` #083344 | `accent-2` #22d3ee | 7.41 | 4.5 | pass |
+| admin | dark | `accent-2-subtle-ink` #67e8f9 | `accent-2-subtle` #083344 | 9.24 | 4.5 | pass |
+| admin | dark | `success` #32d583 | `surface` #1a2532 | 8.11 | 4.5 | pass |
+| admin | dark | `success-subtle-ink` #6ce9a6 | `success-subtle` #053321 | 9.22 | 4.5 | pass |
+| admin | dark | `warning-subtle-ink` #fde047 | `warning-subtle` #422006 | 11.06 | 4.5 | pass |
+| admin | dark | `danger` #f97066 | `surface` #1a2532 | 5.56 | 4.5 | pass |
+| admin | dark | `danger-ink` #55160c | `danger` #f97066 | 5.00 | 4.5 | pass |
+| admin | dark | `danger-subtle-ink` #fda29b | `danger-subtle` #55160c | 7.18 | 4.5 | pass |
+| admin | dark | `info` #60a5fa | `surface` #1a2532 | 6.10 | 4.5 | pass |
+| admin | dark | `info-subtle-ink` #93c5fd | `info-subtle` #172554 | 8.15 | 4.5 | pass |
+| admin | dark | `border-strong` #71859d | `surface` #1a2532 | 4.09 | 3 | pass |
+| admin | dark | `border-strong` #71859d | `bg` #0c1524 | 4.83 | 3 | pass |
+| admin | dark | `focus` #c4b5fd | `surface` #1a2532 | 8.40 | 3 | pass |
+| admin | dark | `focus` #c4b5fd | `bg` #0c1524 | 9.91 | 3 | pass |
+| mobistack | light | `ink` #12100e | `bg` #f4f1ea | 16.83 | 4.5 | pass |
+| mobistack | light | `ink` #12100e | `surface` #faf8f4 | 17.90 | 4.5 | pass |
+| mobistack | light | `ink-muted` #6a6358 | `bg` #f4f1ea | 5.26 | 4.5 | pass |
+| mobistack | light | `ink-muted` #6a6358 | `surface` #faf8f4 | 5.60 | 4.5 | pass |
+| mobistack | light | `ink-faint` #8d8273 | `surface` #faf8f4 | 3.55 | 3 | pass |
+| mobistack | light | `accent` #b45309 | `surface` #faf8f4 | 4.73 | 4.5 | pass |
+| mobistack | light | `accent-ink` #ffffff | `accent` #b45309 | 5.02 | 4.5 | pass |
+| mobistack | light | `accent-subtle-ink` #92400e | `accent-subtle` #fffbeb | 6.84 | 4.5 | pass |
+| mobistack | light | `accent-2` #0f766e | `surface` #faf8f4 | 5.16 | 3 | pass |
+| mobistack | light | `accent-2-ink` #ffffff | `accent-2` #0f766e | 5.47 | 4.5 | pass |
+| mobistack | light | `accent-2-subtle-ink` #115e59 | `accent-2-subtle` #f0fdfa | 7.27 | 4.5 | pass |
+| mobistack | light | `success` #027a48 | `surface` #faf8f4 | 5.10 | 4.5 | pass |
+| mobistack | light | `success-subtle-ink` #05603a | `success-subtle` #ecfdf3 | 7.26 | 4.5 | pass |
+| mobistack | light | `warning-subtle-ink` #854d0e | `warning-subtle` #fefce8 | 6.62 | 4.5 | pass |
+| mobistack | light | `danger` #b42318 | `surface` #faf8f4 | 6.20 | 4.5 | pass |
+| mobistack | light | `danger-ink` #ffffff | `danger` #b42318 | 6.57 | 4.5 | pass |
+| mobistack | light | `danger-subtle-ink` #912018 | `danger-subtle` #fef3f2 | 7.97 | 4.5 | pass |
+| mobistack | light | `info` #1d4ed8 | `surface` #faf8f4 | 6.32 | 4.5 | pass |
+| mobistack | light | `info-subtle-ink` #1e40af | `info-subtle` #eff6ff | 8.01 | 4.5 | pass |
+| mobistack | light | `border-strong` #8d8273 | `surface` #faf8f4 | 3.55 | 3 | pass |
+| mobistack | light | `border-strong` #8d8273 | `bg` #f4f1ea | 3.34 | 3 | pass |
+| mobistack | light | `focus` #b45309 | `surface` #faf8f4 | 4.73 | 3 | pass |
+| mobistack | light | `focus` #b45309 | `bg` #f4f1ea | 4.45 | 3 | pass |
+| mobistack | dark | `ink` #faf8f4 | `bg` #12100e | 17.90 | 4.5 | pass |
+| mobistack | dark | `ink` #faf8f4 | `surface` #221f1a | 15.48 | 4.5 | pass |
+| mobistack | dark | `ink-muted` #b3a993 | `bg` #12100e | 8.15 | 4.5 | pass |
+| mobistack | dark | `ink-muted` #b3a993 | `surface` #221f1a | 7.05 | 4.5 | pass |
+| mobistack | dark | `ink-faint` #8d8273 | `surface` #221f1a | 4.36 | 3 | pass |
+| mobistack | dark | `accent` #fbbf24 | `surface` #221f1a | 9.84 | 4.5 | pass |
+| mobistack | dark | `accent-ink` #451a03 | `accent` #fbbf24 | 8.97 | 4.5 | pass |
+| mobistack | dark | `accent-subtle-ink` #fcd34d | `accent-subtle` #451a03 | 10.39 | 4.5 | pass |
+| mobistack | dark | `accent-2` #2dd4bf | `surface` #221f1a | 8.82 | 3 | pass |
+| mobistack | dark | `accent-2-ink` #042f2e | `accent-2` #2dd4bf | 7.77 | 4.5 | pass |
+| mobistack | dark | `accent-2-subtle-ink` #5eead4 | `accent-2-subtle` #042f2e | 9.78 | 4.5 | pass |
+| mobistack | dark | `success` #32d583 | `surface` #221f1a | 8.59 | 4.5 | pass |
+| mobistack | dark | `success-subtle-ink` #6ce9a6 | `success-subtle` #053321 | 9.22 | 4.5 | pass |
+| mobistack | dark | `warning-subtle-ink` #fde047 | `warning-subtle` #422006 | 11.06 | 4.5 | pass |
+| mobistack | dark | `danger` #f97066 | `surface` #221f1a | 5.89 | 4.5 | pass |
+| mobistack | dark | `danger-ink` #55160c | `danger` #f97066 | 5.00 | 4.5 | pass |
+| mobistack | dark | `danger-subtle-ink` #fda29b | `danger-subtle` #55160c | 7.18 | 4.5 | pass |
+| mobistack | dark | `info` #60a5fa | `surface` #221f1a | 6.46 | 4.5 | pass |
+| mobistack | dark | `info-subtle-ink` #93c5fd | `info-subtle` #172554 | 8.15 | 4.5 | pass |
+| mobistack | dark | `border-strong` #8d8273 | `surface` #221f1a | 4.36 | 3 | pass |
+| mobistack | dark | `border-strong` #8d8273 | `bg` #12100e | 5.04 | 3 | pass |
+| mobistack | dark | `focus` #fcd34d | `surface` #221f1a | 11.39 | 3 | pass |
+| mobistack | dark | `focus` #fcd34d | `bg` #12100e | 13.17 | 3 | pass |
+| mailroom | light | `ink` #12100e | `bg` #f4f1ea | 16.83 | 4.5 | pass |
+| mailroom | light | `ink` #12100e | `surface` #faf8f4 | 17.90 | 4.5 | pass |
+| mailroom | light | `ink-muted` #6a6358 | `bg` #f4f1ea | 5.26 | 4.5 | pass |
+| mailroom | light | `ink-muted` #6a6358 | `surface` #faf8f4 | 5.60 | 4.5 | pass |
+| mailroom | light | `ink-faint` #8d8273 | `surface` #faf8f4 | 3.55 | 3 | pass |
+| mailroom | light | `accent` #8c3b2a | `surface` #faf8f4 | 7.14 | 4.5 | pass |
+| mailroom | light | `accent-ink` #ffffff | `accent` #8c3b2a | 7.57 | 4.5 | pass |
+| mailroom | light | `accent-subtle-ink` #713024 | `accent-subtle` #fbf4f1 | 8.98 | 4.5 | pass |
+| mailroom | light | `accent-2` #0f766e | `surface` #faf8f4 | 5.16 | 3 | pass |
+| mailroom | light | `accent-2-ink` #ffffff | `accent-2` #0f766e | 5.47 | 4.5 | pass |
+| mailroom | light | `accent-2-subtle-ink` #115e59 | `accent-2-subtle` #f0fdfa | 7.27 | 4.5 | pass |
+| mailroom | light | `success` #027a48 | `surface` #faf8f4 | 5.10 | 4.5 | pass |
+| mailroom | light | `success-subtle-ink` #05603a | `success-subtle` #ecfdf3 | 7.26 | 4.5 | pass |
+| mailroom | light | `warning-subtle-ink` #854d0e | `warning-subtle` #fefce8 | 6.62 | 4.5 | pass |
+| mailroom | light | `danger` #b42318 | `surface` #faf8f4 | 6.20 | 4.5 | pass |
+| mailroom | light | `danger-ink` #ffffff | `danger` #b42318 | 6.57 | 4.5 | pass |
+| mailroom | light | `danger-subtle-ink` #912018 | `danger-subtle` #fef3f2 | 7.97 | 4.5 | pass |
+| mailroom | light | `info` #1d4ed8 | `surface` #faf8f4 | 6.32 | 4.5 | pass |
+| mailroom | light | `info-subtle-ink` #1e40af | `info-subtle` #eff6ff | 8.01 | 4.5 | pass |
+| mailroom | light | `border-strong` #8d8273 | `surface` #faf8f4 | 3.55 | 3 | pass |
+| mailroom | light | `border-strong` #8d8273 | `bg` #f4f1ea | 3.34 | 3 | pass |
+| mailroom | light | `focus` #8c3b2a | `surface` #faf8f4 | 7.14 | 3 | pass |
+| mailroom | light | `focus` #8c3b2a | `bg` #f4f1ea | 6.71 | 3 | pass |
+| mailroom | dark | `ink` #faf8f4 | `bg` #12100e | 17.90 | 4.5 | pass |
+| mailroom | dark | `ink` #faf8f4 | `surface` #221f1a | 15.48 | 4.5 | pass |
+| mailroom | dark | `ink-muted` #b3a993 | `bg` #12100e | 8.15 | 4.5 | pass |
+| mailroom | dark | `ink-muted` #b3a993 | `surface` #221f1a | 7.05 | 4.5 | pass |
+| mailroom | dark | `ink-faint` #8d8273 | `surface` #221f1a | 4.36 | 3 | pass |
+| mailroom | dark | `accent` #c17a62 | `surface` #221f1a | 4.87 | 4.5 | pass |
+| mailroom | dark | `accent-ink` #331512 | `accent` #c17a62 | 4.96 | 4.5 | pass |
+| mailroom | dark | `accent-subtle-ink` #dda894 | `accent-subtle` #331512 | 8.04 | 4.5 | pass |
+| mailroom | dark | `accent-2` #2dd4bf | `surface` #221f1a | 8.82 | 3 | pass |
+| mailroom | dark | `accent-2-ink` #042f2e | `accent-2` #2dd4bf | 7.77 | 4.5 | pass |
+| mailroom | dark | `accent-2-subtle-ink` #5eead4 | `accent-2-subtle` #042f2e | 9.78 | 4.5 | pass |
+| mailroom | dark | `success` #32d583 | `surface` #221f1a | 8.59 | 4.5 | pass |
+| mailroom | dark | `success-subtle-ink` #6ce9a6 | `success-subtle` #053321 | 9.22 | 4.5 | pass |
+| mailroom | dark | `warning-subtle-ink` #fde047 | `warning-subtle` #422006 | 11.06 | 4.5 | pass |
+| mailroom | dark | `danger` #f97066 | `surface` #221f1a | 5.89 | 4.5 | pass |
+| mailroom | dark | `danger-ink` #55160c | `danger` #f97066 | 5.00 | 4.5 | pass |
+| mailroom | dark | `danger-subtle-ink` #fda29b | `danger-subtle` #55160c | 7.18 | 4.5 | pass |
+| mailroom | dark | `info` #60a5fa | `surface` #221f1a | 6.46 | 4.5 | pass |
+| mailroom | dark | `info-subtle-ink` #93c5fd | `info-subtle` #172554 | 8.15 | 4.5 | pass |
+| mailroom | dark | `border-strong` #8d8273 | `surface` #221f1a | 4.36 | 3 | pass |
+| mailroom | dark | `border-strong` #8d8273 | `bg` #12100e | 5.04 | 3 | pass |
+| mailroom | dark | `focus` #dda894 | `surface` #221f1a | 7.90 | 3 | pass |
+| mailroom | dark | `focus` #dda894 | `bg` #12100e | 9.13 | 3 | pass |
+
+`border` is intentionally not asserted: it draws decorative dividers. Every boundary that
+identifies a control uses `border-strong`, which is asserted above at 3:1.
