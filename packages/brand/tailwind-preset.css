@@ -6,7 +6,7 @@
 @import "./prabhix-tokens.css";
 
 /* Every app imports this one file and never redefines a colour. */
-@theme {
+@theme inline {
   /* semantic colours — resolve to the active [data-brand] and [data-theme] */
   --color-bg: var(--px-bg);
   --color-bg-accent: var(--px-bg-accent);
@@ -300,7 +300,10 @@
   --color-tag-clay-bg: var(--px-tag-clay-bg);
   --color-tag-clay-ink: var(--px-tag-clay-ink);
   --color-tag-clay-border: var(--px-tag-clay-border);
+}
 
+/* Not colours: identical under every brand, and some are read as var() directly. */
+@theme {
   /* spacing */
   --spacing-0: var(--px-space-0);
   --spacing-1: var(--px-space-1);

@@ -18,7 +18,8 @@
     @import "@prabhix/ui/preset.css";
 */
 
-@theme {
+/* `inline` so a `[data-brand]` scope reaches these. See build-tokens.mjs for why. */
+@theme inline {
   /* The product accent, under the name the primitives use for it. */
   --color-primary: var(--px-accent);
   --color-primary-strong: var(--px-accent-hover);
@@ -41,7 +42,9 @@
   --color-destructive-foreground: var(--px-danger-ink);
 
   --color-ring: var(--px-focus);
+}
 
+@theme {
   /*
     Height animations for the disclosure primitives. They belong here rather than in each app
     because the utility name is baked into the component - `data-[state=open]:animate-

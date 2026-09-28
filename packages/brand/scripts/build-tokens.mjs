@@ -164,10 +164,14 @@ function auditCategorical() {
  * One product's accent pair, for use inside a different product's interface.
  *
  * The app store lists three products on one page, the marketing site previews all of them, and
- * an app switcher shows every product at once. None of those can express a foreign brand by
- * setting `data-brand`, because the generated dark blocks are
- * `[data-brand="x"][data-theme="dark"]` — both attributes on one element — so a card carrying
- * only `data-brand` would take that brand's *light* tokens while sitting on a dark page.
+ * an app switcher shows every product at once.
+ *
+ * `data-brand` on a card now handles that case — the dark blocks are emitted with a descendant
+ * selector as well as a compound one, so a brand declared below the root resolves correctly in
+ * either mode. These remain the lighter-touch option: `data-brand` re-themes everything inside
+ * it, surfaces included, which is right for a card standing on its own and too much for a row
+ * in a list or a single label that should keep the host product's surfaces and borrow only a
+ * hue.
  *
  * The first attempt at the app store used the 600 step of each brand's ramp instead, on the
  * theory that a mid-tone reads on either background. Measured, 21 of 24 label placements failed
@@ -321,9 +325,26 @@ function buildCss() {
       if (mode === "light") {
         selector = isDefault ? `:root,\n[data-brand="${themeName}"]` : `[data-brand="${themeName}"]`;
       } else {
+        // Two selectors, because a brand can be declared in two places.
+        //
+        // `[data-brand][data-theme="dark"]` is an app: one brand, set on <html> beside the
+        // theme. `[data-theme="dark"] [data-brand]` is a card: the theme is on <html> and the
+        // brand is on an element somewhere below it.
+        //
+        // Only the first used to be emitted, so a card carrying `data-brand` on a dark page
+        // matched no dark block and fell back to the brand's *light* roles — light surfaces on
+        // a dark page, with the page's white heading text on top of them. That is the exact
+        // limitation described above crossBrandAccent, and it is why the app store and the
+        // marketing site had to reach for a cross-brand accent pair instead of just naming the
+        // brand. Now they can name the brand.
+        //
+        // Both are (0,2,0), so neither can shadow the other, and they cannot both match the
+        // same element: a descendant combinator needs the theme on an *ancestor*.
+        const onSelf = `[data-brand="${themeName}"][data-theme="dark"]`;
+        const nested = `[data-theme="dark"] [data-brand="${themeName}"]`;
         selector = isDefault
-          ? `[data-theme="dark"],\n[data-brand="${themeName}"][data-theme="dark"]`
-          : `[data-brand="${themeName}"][data-theme="dark"]`;
+          ? `[data-theme="dark"],\n${onSelf},\n${nested}`
+          : `${onSelf},\n${nested}`;
       }
       L.push(`/* ${T.themes[themeName].label} — ${mode} — accent ${T.themes[themeName].accent} + ${T.themes[themeName].accent2} */`);
       L.push(`${selector} {`);
@@ -338,9 +359,14 @@ function buildCss() {
   L.push("@media (prefers-color-scheme: dark) {");
   for (const themeName of themeNames) {
     const map = roleMap(themeName, "dark");
+    // Every selector here is rooted at `:root:not([data-theme])`, which is what "only when no
+    // explicit theme is set" has to mean once a brand can appear below the root. A bare
+    // `[data-brand="x"]:not([data-theme])` reads only the card's own attributes, so a card on a
+    // page the visitor had explicitly switched to light would still take dark tokens whenever
+    // the operating system was dark.
     const sel = themeName === "technologies"
-      ? `  :root:not([data-theme]),\n  [data-brand="${themeName}"]:not([data-theme])`
-      : `  [data-brand="${themeName}"]:not([data-theme])`;
+      ? `  :root:not([data-theme]),\n  :root:not([data-theme]) [data-brand="${themeName}"]:not([data-theme])`
+      : `  :root:not([data-theme])[data-brand="${themeName}"],\n  :root:not([data-theme]) [data-brand="${themeName}"]:not([data-theme])`;
     L.push(`${sel} {`);
     for (const [role, hex] of Object.entries(map)) L.push(`    --px-${role}: ${hex};`);
     for (const [k, v] of Object.entries(T.scale.elevation.dark)) L.push(`    --px-elevation-${k}: ${v};`);
@@ -365,7 +391,30 @@ function buildPreset() {
   const L = [BANNER("tailwind-preset.css"), ""];
   L.push(`@import "./prabhix-tokens.css";`, "");
   L.push("/* Every app imports this one file and never redefines a colour. */");
-  L.push("@theme {");
+
+  // `inline` is what makes a brand scope work, and without it the whole system quietly
+  // collapses to one colour.
+  //
+  // A plain `@theme` emits `:root { --color-accent: var(--px-accent) }`. Custom properties are
+  // substituted at computed-value time on the element that declares them, so `--color-accent`
+  // computes *on :root* — to whatever `--px-accent` is there — and descendants inherit that
+  // finished colour. `bg-accent` on a card inside `[data-brand="oneops"]` then paints the root's
+  // accent, because the indirection was already resolved before the brand scope was reached.
+  //
+  // This is why the failure was invisible for so long: `[data-theme="dark"]` is set on <html>,
+  // which *is* :root, so dark mode always worked, and each single-brand app sets `[data-brand]`
+  // at the root too. Only a page showing two products side by side can see the bug — and on the
+  // marketing site all three product cards rendered the same teal.
+  //
+  // `@theme inline` omits the `:root` declaration and inlines the value into the utility, so
+  // `bg-accent` is `background-color: var(--px-accent)` and resolves against the element's own
+  // cascade. Nothing reads `var(--color-*)` by hand anywhere in the portfolio, so dropping those
+  // root declarations costs nothing.
+  //
+  // Colours only. Spacing, radius, type and breakpoints do not vary by brand, `--font-display`
+  // is read directly as `var(--font-display)` by two apps, and Tailwind expands the layout
+  // namespaces inside @media preludes where a var() is invalid — so those stay in a plain block.
+  L.push("@theme inline {");
 
   L.push("  /* semantic colours — resolve to the active [data-brand] and [data-theme] */");
   for (const role of roles("light")) L.push(`  --color-${role}: var(--px-${role});`);
@@ -383,7 +432,11 @@ function buildPreset() {
     L.push(`  --color-tag-${t.name}-border: var(--px-tag-${t.name}-border);`);
   }
 
-  L.push("", "  /* spacing */");
+  L.push("}", "");
+  L.push("/* Not colours: identical under every brand, and some are read as var() directly. */");
+  L.push("@theme {");
+
+  L.push("  /* spacing */");
   for (const k of Object.keys(T.scale.space))
     if (k !== "$doc") L.push(`  --spacing-${k}: var(--px-space-${k.replace(".", "\\.")});`);
 
