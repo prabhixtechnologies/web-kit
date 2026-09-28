@@ -159,6 +159,92 @@ function auditCategorical() {
   return failures;
 }
 
+/**
+ * One product's accent pair, for use inside a different product's interface.
+ *
+ * The app store lists three products on one page, the marketing site previews all of them, and
+ * an app switcher shows every product at once. None of those can express a foreign brand by
+ * setting `data-brand`, because the generated dark blocks are
+ * `[data-brand="x"][data-theme="dark"]` — both attributes on one element — so a card carrying
+ * only `data-brand` would take that brand's *light* tokens while sitting on a dark page.
+ *
+ * The first attempt at the app store used the 600 step of each brand's ramp instead, on the
+ * theory that a mid-tone reads on either background. Measured, 21 of 24 label placements failed
+ * AA, the worst at 2.19:1: a 600 step is chosen to sit on light surfaces, and on a dark one it
+ * is barely above the background. So these are mode-aware, taken from the brand's own resolved
+ * accent for the current mode, and asserted against every surface in the portfolio rather than
+ * only against that brand's own.
+ */
+function brandAccents(mode) {
+  const out = [];
+  for (const themeName of themeNames) {
+    const m = roleMap(themeName, mode);
+    out.push({
+      brand: themeName,
+      accent: m.accent,
+      accent2: m["accent-2"],
+      text: m["accent-text"],
+      text2: m["accent-2-text"],
+      ink: m["accent-ink"],
+    });
+  }
+  return out;
+}
+
+/** Every declaration that depends on the mode but not on the brand. */
+function modeColours(mode) {
+  const L = [];
+  T.palette.categorical[mode].forEach((hex, i) => L.push(`--px-cat-${i + 1}: ${hex};`));
+  for (const t of tagSwatches()[mode]) {
+    L.push(`--px-tag-${t.name}-bg: ${t.bg};`);
+    L.push(`--px-tag-${t.name}-ink: ${t.ink};`);
+    L.push(`--px-tag-${t.name}-border: ${t.border};`);
+  }
+  for (const b of brandAccents(mode)) {
+    L.push(`--px-brand-${b.brand}: ${b.accent};`);
+    L.push(`--px-brand-${b.brand}-2: ${b.accent2};`);
+    L.push(`--px-brand-${b.brand}-text: ${b.text};`);
+    L.push(`--px-brand-${b.brand}-2-text: ${b.text2};`);
+    L.push(`--px-brand-${b.brand}-ink: ${b.ink};`);
+  }
+  return L;
+}
+
+// Checked against every theme's surfaces, not just the owning brand's, because the whole point
+// of these names is that they appear somewhere else — and "somewhere else" includes a theme with
+// a warm neutral, which is where the near misses live.
+//
+// The floors mirror the roles the values come from. `-text` is a label, so 4.5:1 on all four
+// surfaces, which is the same promise `accent-text` makes inside its own theme. The unsuffixed
+// pair is a fill for a gradient, a dot or a chip, so 3:1 — WCAG 1.4.11 for non-text. Asserting
+// the fill at 4.5 was the first attempt and it failed seven ways, all of them colours that are
+// perfectly legible as a gradient and were never going to carry text.
+function auditBrandAccents() {
+  const failures = [];
+  for (const mode of ["light", "dark"]) {
+    const surfaces = new Set();
+    for (const themeName of themeNames) {
+      const m = roleMap(themeName, mode);
+      for (const role of ["bg", "surface", "surface-raised", "surface-sunken"]) surfaces.add(m[role]);
+    }
+    for (const b of brandAccents(mode))
+      for (const [role, hex, min] of [
+        ["", b.accent, 3],
+        ["-2", b.accent2, 3],
+        ["-text", b.text, 4.5],
+        ["-2-text", b.text2, 4.5],
+      ])
+        for (const bg of surfaces) {
+          const ratio = contrast(hex, bg);
+          if (ratio < min)
+            failures.push(
+              `brand/${mode}: --px-brand-${b.brand}${role} ${hex} on ${bg} = ${ratio.toFixed(2)}:1 (needs ${min}:1)`,
+            );
+        }
+  }
+  return failures;
+}
+
 function buildCss() {
   const L = [BANNER("prabhix-tokens.css"), ""];
 
@@ -207,24 +293,21 @@ function buildCss() {
   for (const [k, v] of Object.entries(T.scale.density.compact)) L.push(`  --px-density-${kebab(k)}: ${v};`);
   L.push("}", "");
 
-  // categorical + tag, theme-independent
-  L.push("/* categorical series and user-assignable tag swatches */");
+  // Brand-independent colours: the categorical series, the tag swatches, and each product's
+  // accent pair for use outside that product. All three vary by mode and by nothing else, so
+  // they are emitted from one function into all three places a mode is decided — the light
+  // default, the explicit [data-theme="dark"], and the system-preference block below.
+  //
+  // One function because they had drifted. The dark tag swatches were emitted only into the
+  // explicit block, so a visitor on a system set to dark who had never touched a theme toggle
+  // got the light swatches: pale `#ffe4e6` chips on a dark page, in every app that does not
+  // write data-theme itself.
+  L.push("/* categorical series, tag swatches and cross-brand accents */");
   L.push(":root {");
-  T.palette.categorical.light.forEach((hex, i) => L.push(`  --px-cat-${i + 1}: ${hex};`));
-  const tags = tagSwatches();
-  for (const t of tags.light) {
-    L.push(`  --px-tag-${t.name}-bg: ${t.bg};`);
-    L.push(`  --px-tag-${t.name}-ink: ${t.ink};`);
-    L.push(`  --px-tag-${t.name}-border: ${t.border};`);
-  }
+  L.push(...modeColours("light").map((l) => `  ${l}`));
   L.push("}", "");
   L.push(`[data-theme="dark"] {`);
-  T.palette.categorical.dark.forEach((hex, i) => L.push(`  --px-cat-${i + 1}: ${hex};`));
-  for (const t of tags.dark) {
-    L.push(`  --px-tag-${t.name}-bg: ${t.bg};`);
-    L.push(`  --px-tag-${t.name}-ink: ${t.ink};`);
-    L.push(`  --px-tag-${t.name}-border: ${t.border};`);
-  }
+  L.push(...modeColours("dark").map((l) => `  ${l}`));
   L.push("}", "");
 
   // Semantic roles per brand. Default brand is technologies; at equal specificity later blocks win,
@@ -263,11 +346,9 @@ function buildCss() {
     for (const [k, v] of Object.entries(gradientMap(map))) L.push(`    --px-gradient-${k}: ${v};`);
     L.push("  }");
   }
-  T.palette.categorical.dark.forEach((hex, i) => {
-    if (i === 0) L.push("  :root:not([data-theme]) {");
-    L.push(`    --px-cat-${i + 1}: ${hex};`);
-    if (i === T.palette.categorical.dark.length - 1) L.push("  }");
-  });
+  L.push("  :root:not([data-theme]) {");
+  L.push(...modeColours("dark").map((l) => `    ${l}`));
+  L.push("  }");
   L.push("}", "");
 
   L.push("@media (prefers-reduced-motion: reduce) {", "  :root {");
@@ -535,6 +616,30 @@ function buildTagsTs() {
   L.push("  return TAG_TONES[1 + (hash % (TAG_TONES.length - 1))];");
   L.push("}");
   L.push("");
+  L.push("/**");
+  L.push(" * The resolved hex for each swatch, for the few places that cannot use a CSS variable.");
+  L.push(" *");
+  L.push(" * Prefer `var(--px-tag-<tone>-bg)` and `-ink` everywhere you can: those follow the mode,");
+  L.push(" * and these do not. This exists for values that leave the stylesheet — a colour written to");
+  L.push(" * the database, an `<input type=\"color\">`, a third-party SDK that takes a hex string. Both");
+  L.push(" * modes are given so a caller storing one can also show the other correctly.");
+  L.push(" *");
+  L.push(" * Every ink is asserted AA against its own bg by the contrast gate. Nothing is asserted");
+  L.push(" * about an ink on any other background, so do not pair them across tones.");
+  L.push(" */");
+  L.push("export const TAG_SWATCHES: Record<");
+  L.push("  \"light\" | \"dark\",");
+  L.push("  Record<TagTone, { bg: string; ink: string; border: string }>");
+  L.push("> = {");
+  for (const mode of ["light", "dark"]) {
+    L.push(`  ${mode}: {`);
+    for (const t of tagSwatches()[mode]) {
+      L.push(`    ${t.name}: { bg: "${t.bg}", ink: "${t.ink}", border: "${t.border}" },`);
+    }
+    L.push("  },");
+  }
+  L.push("};");
+  L.push("");
   return L.join("\n");
 }
 
@@ -549,24 +654,44 @@ function round(n) { return Math.round(n * 100) / 100; }
 
 const audit = auditContrast();
 
+// Each artifact names the repository that owns it. Everything outside web-kit is in a sibling
+// repository, which only exists when the whole portfolio is checked out side by side; CI clones
+// one repo at a time. Those targets are skipped there rather than reported as drift, because a
+// check that fails on every CI run is a check people learn to ignore.
+//
+// The skip is announced, never silent. A run that quietly wrote fewer files than the author
+// expected is exactly how Identity or Mobile ends up holding a stale copy of the tokens.
 const artifacts = [
-  [join(pkg, "prabhix-tokens.css"), buildCss()],
-  [join(pkg, "tailwind-preset.css"), buildPreset()],
-  [join(pkg, "TOKENS.md"), buildDoc(audit)],
-  [join(repo, "Mobile/packages/prabhix_theme/lib/src/prabhix_tokens.dart"), buildDart()],
+  ["web-kit", join(pkg, "prabhix-tokens.css"), buildCss()],
+  ["web-kit", join(pkg, "tailwind-preset.css"), buildPreset()],
+  ["web-kit", join(pkg, "TOKENS.md"), buildDoc(audit)],
   // Emitted into both packages on purpose. `brand` is where it belongs, because a tag
   // swatch is a token and every web app already depends on brand; `ui` gets a copy so it
   // stays installable without a nested file: dependency, which npm resolves from the
   // registry when a consuming app links ui by path. Two generated copies of one function
   // cannot drift; a hand-maintained re-export across a package boundary would.
-  [join(repo, "web-kit/packages/brand/src/tags.ts"), buildTagsTs()],
-  [join(repo, "web-kit/packages/ui/src/tags.ts"), buildTagsTs()],
-  [join(repo, "Infra/design/prabhix-tokens.css"), buildCss()],
-  [join(repo, "Identity/src/main/resources/static/assets/prabhix-tokens.css"), buildCss()],
+  ["web-kit", join(pkg, "src/tags.ts"), buildTagsTs()],
+  ["web-kit", join(repo, "web-kit/packages/ui/src/tags.ts"), buildTagsTs()],
+  ["Mobile", join(repo, "Mobile/packages/prabhix_theme/lib/src/prabhix_tokens.dart"), buildDart()],
+  ["Infra", join(repo, "Infra/design/prabhix-tokens.css"), buildCss()],
+  // Served to the public by the app-store container, so it is a real surface and not a design
+  // reference like the one above. It held a hand-written 68-line file that still described the
+  // house cyan as the only accent and defined --px-house-* names nothing else has used for
+  // months; generating it is the only way a page nobody opens while working stays current.
+  ["Infra", join(repo, "Infra/deploy/app-store/www/assets/prabhix-tokens.css"), buildCss()],
+  ["Identity", join(repo, "Identity/src/main/resources/static/assets/prabhix-tokens.css"), buildCss()],
 ];
 
+/** web-kit is this checkout; a sibling counts as present only if its directory exists. */
+const present = (owner) => owner === "web-kit" || existsSync(join(repo, owner));
+
 let drift = 0;
-for (const [path, body] of artifacts) {
+const skipped = new Set();
+for (const [owner, path, body] of artifacts) {
+  if (!present(owner)) {
+    skipped.add(owner);
+    continue;
+  }
   if (checkOnly) {
     const current = existsSync(path) ? readFileSync(path, "utf8") : "";
     if (current !== body) {
@@ -579,22 +704,35 @@ for (const [path, body] of artifacts) {
   writeFileSync(path, body, "utf8");
   console.log(`wrote ${path.replace(repo, ".")}`);
 }
+if (skipped.size) {
+  console.log(`\nskipped (repository not checked out here): ${[...skipped].sort().join(", ")}`);
+}
 
 const tagFailures = auditTags();
 const catFailures = auditCategorical();
-const allFailures = [...audit.failures, ...tagFailures, ...catFailures];
+const brandFailures = auditBrandAccents();
+const allFailures = [...audit.failures, ...tagFailures, ...catFailures, ...brandFailures];
 if (allFailures.length) {
   console.error(`\ncontrast gate failed — ${allFailures.length} pair(s) below WCAG AA:\n`);
   for (const f of allFailures) console.error(`  ${f}`);
-  process.exit(1);
+} else {
+  console.log(
+    `\ncontrast gate passed — ${audit.rows.length} role assertions across ${themeNames.length} themes x 2 modes, ` +
+      `plus ${T.palette.tag.ramps.length * 2} tag swatches, ` +
+      `${T.palette.categorical.light.length * 2} series colours ` +
+      `and ${themeNames.length * 8} cross-brand accents against every surface`,
+  );
 }
-console.log(
-  `\ncontrast gate passed — ${audit.rows.length} role assertions across ${themeNames.length} themes x 2 modes, ` +
-    `plus ${T.palette.tag.ramps.length * 2} tag swatches ` +
-    `and ${T.palette.categorical.light.length * 2} series colours against every surface`,
-);
 
 if (drift) {
   console.error(`\n${drift} generated file(s) out of sync. Run: node scripts/build-tokens.mjs`);
+}
+
+// One verdict, written to the stream that carries the detail, because a shell showing stdout and
+// stderr as separate blocks will otherwise end a failed run with "contrast gate passed".
+if (allFailures.length || drift) {
+  console.error(
+    `\nFAILED: ${allFailures.length} contrast failure(s), ${drift} file(s) out of sync.`,
+  );
   process.exit(1);
 }

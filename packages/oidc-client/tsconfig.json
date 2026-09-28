@@ -4,6 +4,10 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "bundler",
+    // The tests run under `node --experimental-strip-types`, which resolves imports the way the
+    // runtime does and so needs the real `./index.ts` on the specifier. Safe with noEmit: tsc is
+    // only type-checking here, and every consumer of this package bundles it from source.
+    "allowImportingTsExtensions": true,
     "strict": true,
     "skipLibCheck": true,
     "noEmit": true,

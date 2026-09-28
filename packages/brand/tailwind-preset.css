@@ -31,11 +31,13 @@
   --color-accent-selected: var(--px-accent-selected);
   --color-accent-disabled: var(--px-accent-disabled);
   --color-accent-ink: var(--px-accent-ink);
+  --color-accent-text: var(--px-accent-text);
   --color-accent-subtle: var(--px-accent-subtle);
   --color-accent-subtle-ink: var(--px-accent-subtle-ink);
   --color-accent-subtle-border: var(--px-accent-subtle-border);
   --color-accent-2: var(--px-accent-2);
   --color-accent-2-hover: var(--px-accent-2-hover);
+  --color-accent-2-text: var(--px-accent-2-text);
   --color-accent-2-ink: var(--px-accent-2-ink);
   --color-accent-2-subtle: var(--px-accent-2-subtle);
   --color-accent-2-subtle-ink: var(--px-accent-2-subtle-ink);

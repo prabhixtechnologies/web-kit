@@ -10,7 +10,7 @@
 export const TOKEN_STYLESHEET = "prabhix-tokens.css";
 
 /** The tag swatch list and the seed-to-swatch rule. Generated from tokens.json. */
-export { TAG_TONES, toneFor, type TagTone } from "./tags";
+export { TAG_SWATCHES, TAG_TONES, toneFor, type TagTone } from "./tags";
 
 function markUrl(file: string): string {
   return new URL(`../marks/${file}`, import.meta.url).href;

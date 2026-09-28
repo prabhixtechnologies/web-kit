@@ -19,7 +19,7 @@ Selecting a theme is one attribute on `<html>`:
 <html data-brand="mobistack" data-theme="dark" data-density="compact">
 ```
 
-## Contrast audit — 230 assertions, 0 failing
+## Contrast audit — 310 assertions, 0 failing
 
 | Theme | Mode | Foreground | Background | Ratio | Min | |
 |---|---|---|---|---:|---:|---|
@@ -34,6 +34,14 @@ Selecting a theme is one attribute on `<html>`:
 | technologies | light | `accent-2` #4338ca | `surface` #f6f8fb | 7.43 | 3 | pass |
 | technologies | light | `accent-2-ink` #ffffff | `accent-2` #4338ca | 7.90 | 4.5 | pass |
 | technologies | light | `accent-2-subtle-ink` #3730a3 | `accent-2-subtle` #eef2ff | 8.88 | 4.5 | pass |
+| technologies | light | `accent-text` #155e75 | `bg` #eef2f7 | 6.46 | 4.5 | pass |
+| technologies | light | `accent-text` #155e75 | `surface` #f6f8fb | 6.83 | 4.5 | pass |
+| technologies | light | `accent-text` #155e75 | `surface-raised` #ffffff | 7.27 | 4.5 | pass |
+| technologies | light | `accent-text` #155e75 | `surface-sunken` #dfe6ef | 5.78 | 4.5 | pass |
+| technologies | light | `accent-2-text` #3730a3 | `bg` #eef2f7 | 8.84 | 4.5 | pass |
+| technologies | light | `accent-2-text` #3730a3 | `surface` #f6f8fb | 9.34 | 4.5 | pass |
+| technologies | light | `accent-2-text` #3730a3 | `surface-raised` #ffffff | 9.93 | 4.5 | pass |
+| technologies | light | `accent-2-text` #3730a3 | `surface-sunken` #dfe6ef | 7.90 | 4.5 | pass |
 | technologies | light | `success` #027a48 | `surface` #f6f8fb | 5.09 | 4.5 | pass |
 | technologies | light | `success-subtle-ink` #05603a | `success-subtle` #ecfdf3 | 7.26 | 4.5 | pass |
 | technologies | light | `warning-subtle-ink` #854d0e | `warning-subtle` #fefce8 | 6.62 | 4.5 | pass |
@@ -57,6 +65,14 @@ Selecting a theme is one attribute on `<html>`:
 | technologies | dark | `accent-2` #818cf8 | `surface` #1a2532 | 5.20 | 3 | pass |
 | technologies | dark | `accent-2-ink` #1e1b4b | `accent-2` #818cf8 | 5.36 | 4.5 | pass |
 | technologies | dark | `accent-2-subtle-ink` #a5b4fc | `accent-2-subtle` #1e1b4b | 8.02 | 4.5 | pass |
+| technologies | dark | `accent-text` #67e8f9 | `bg` #0c1524 | 12.62 | 4.5 | pass |
+| technologies | dark | `accent-text` #67e8f9 | `surface` #1a2532 | 10.69 | 4.5 | pass |
+| technologies | dark | `accent-text` #67e8f9 | `surface-raised` #2c3a49 | 8.01 | 4.5 | pass |
+| technologies | dark | `accent-text` #67e8f9 | `surface-sunken` #0c1524 | 12.62 | 4.5 | pass |
+| technologies | dark | `accent-2-text` #a5b4fc | `bg` #0c1524 | 9.17 | 4.5 | pass |
+| technologies | dark | `accent-2-text` #a5b4fc | `surface` #1a2532 | 7.78 | 4.5 | pass |
+| technologies | dark | `accent-2-text` #a5b4fc | `surface-raised` #2c3a49 | 5.82 | 4.5 | pass |
+| technologies | dark | `accent-2-text` #a5b4fc | `surface-sunken` #0c1524 | 9.17 | 4.5 | pass |
 | technologies | dark | `success` #32d583 | `surface` #1a2532 | 8.11 | 4.5 | pass |
 | technologies | dark | `success-subtle-ink` #6ce9a6 | `success-subtle` #053321 | 9.22 | 4.5 | pass |
 | technologies | dark | `warning-subtle-ink` #fde047 | `warning-subtle` #422006 | 11.06 | 4.5 | pass |
@@ -80,6 +96,14 @@ Selecting a theme is one attribute on `<html>`:
 | oneops | light | `accent-2` #a21caf | `surface` #f6f8fb | 5.94 | 3 | pass |
 | oneops | light | `accent-2-ink` #ffffff | `accent-2` #a21caf | 6.32 | 4.5 | pass |
 | oneops | light | `accent-2-subtle-ink` #86198f | `accent-2-subtle` #fdf4ff | 7.67 | 4.5 | pass |
+| oneops | light | `accent-text` #3730a3 | `bg` #eef2f7 | 8.84 | 4.5 | pass |
+| oneops | light | `accent-text` #3730a3 | `surface` #f6f8fb | 9.34 | 4.5 | pass |
+| oneops | light | `accent-text` #3730a3 | `surface-raised` #ffffff | 9.93 | 4.5 | pass |
+| oneops | light | `accent-text` #3730a3 | `surface-sunken` #dfe6ef | 7.90 | 4.5 | pass |
+| oneops | light | `accent-2-text` #86198f | `bg` #eef2f7 | 7.33 | 4.5 | pass |
+| oneops | light | `accent-2-text` #86198f | `surface` #f6f8fb | 7.74 | 4.5 | pass |
+| oneops | light | `accent-2-text` #86198f | `surface-raised` #ffffff | 8.24 | 4.5 | pass |
+| oneops | light | `accent-2-text` #86198f | `surface-sunken` #dfe6ef | 6.55 | 4.5 | pass |
 | oneops | light | `success` #027a48 | `surface` #f6f8fb | 5.09 | 4.5 | pass |
 | oneops | light | `success-subtle-ink` #05603a | `success-subtle` #ecfdf3 | 7.26 | 4.5 | pass |
 | oneops | light | `warning-subtle-ink` #854d0e | `warning-subtle` #fefce8 | 6.62 | 4.5 | pass |
@@ -103,6 +127,14 @@ Selecting a theme is one attribute on `<html>`:
 | oneops | dark | `accent-2` #e879f9 | `surface` #1a2532 | 6.30 | 3 | pass |
 | oneops | dark | `accent-2-ink` #4a044e | `accent-2` #e879f9 | 6.02 | 4.5 | pass |
 | oneops | dark | `accent-2-subtle-ink` #f0abfc | `accent-2-subtle` #4a044e | 8.41 | 4.5 | pass |
+| oneops | dark | `accent-text` #a5b4fc | `bg` #0c1524 | 9.17 | 4.5 | pass |
+| oneops | dark | `accent-text` #a5b4fc | `surface` #1a2532 | 7.78 | 4.5 | pass |
+| oneops | dark | `accent-text` #a5b4fc | `surface-raised` #2c3a49 | 5.82 | 4.5 | pass |
+| oneops | dark | `accent-text` #a5b4fc | `surface-sunken` #0c1524 | 9.17 | 4.5 | pass |
+| oneops | dark | `accent-2-text` #f0abfc | `bg` #0c1524 | 10.39 | 4.5 | pass |
+| oneops | dark | `accent-2-text` #f0abfc | `surface` #1a2532 | 8.81 | 4.5 | pass |
+| oneops | dark | `accent-2-text` #f0abfc | `surface-raised` #2c3a49 | 6.60 | 4.5 | pass |
+| oneops | dark | `accent-2-text` #f0abfc | `surface-sunken` #0c1524 | 10.39 | 4.5 | pass |
 | oneops | dark | `success` #32d583 | `surface` #1a2532 | 8.11 | 4.5 | pass |
 | oneops | dark | `success-subtle-ink` #6ce9a6 | `success-subtle` #053321 | 9.22 | 4.5 | pass |
 | oneops | dark | `warning-subtle-ink` #fde047 | `warning-subtle` #422006 | 11.06 | 4.5 | pass |
@@ -126,6 +158,14 @@ Selecting a theme is one attribute on `<html>`:
 | admin | light | `accent-2` #0e7490 | `surface` #f6f8fb | 5.04 | 3 | pass |
 | admin | light | `accent-2-ink` #ffffff | `accent-2` #0e7490 | 5.36 | 4.5 | pass |
 | admin | light | `accent-2-subtle-ink` #155e75 | `accent-2-subtle` #ecfeff | 6.99 | 4.5 | pass |
+| admin | light | `accent-text` #5b21b6 | `bg` #eef2f7 | 7.99 | 4.5 | pass |
+| admin | light | `accent-text` #5b21b6 | `surface` #f6f8fb | 8.44 | 4.5 | pass |
+| admin | light | `accent-text` #5b21b6 | `surface-raised` #ffffff | 8.98 | 4.5 | pass |
+| admin | light | `accent-text` #5b21b6 | `surface-sunken` #dfe6ef | 7.14 | 4.5 | pass |
+| admin | light | `accent-2-text` #155e75 | `bg` #eef2f7 | 6.46 | 4.5 | pass |
+| admin | light | `accent-2-text` #155e75 | `surface` #f6f8fb | 6.83 | 4.5 | pass |
+| admin | light | `accent-2-text` #155e75 | `surface-raised` #ffffff | 7.27 | 4.5 | pass |
+| admin | light | `accent-2-text` #155e75 | `surface-sunken` #dfe6ef | 5.78 | 4.5 | pass |
 | admin | light | `success` #027a48 | `surface` #f6f8fb | 5.09 | 4.5 | pass |
 | admin | light | `success-subtle-ink` #05603a | `success-subtle` #ecfdf3 | 7.26 | 4.5 | pass |
 | admin | light | `warning-subtle-ink` #854d0e | `warning-subtle` #fefce8 | 6.62 | 4.5 | pass |
@@ -149,6 +189,14 @@ Selecting a theme is one attribute on `<html>`:
 | admin | dark | `accent-2` #22d3ee | `surface` #1a2532 | 8.58 | 3 | pass |
 | admin | dark | `accent-2-ink` #083344 | `accent-2` #22d3ee | 7.41 | 4.5 | pass |
 | admin | dark | `accent-2-subtle-ink` #67e8f9 | `accent-2-subtle` #083344 | 9.24 | 4.5 | pass |
+| admin | dark | `accent-text` #c4b5fd | `bg` #0c1524 | 9.91 | 4.5 | pass |
+| admin | dark | `accent-text` #c4b5fd | `surface` #1a2532 | 8.40 | 4.5 | pass |
+| admin | dark | `accent-text` #c4b5fd | `surface-raised` #2c3a49 | 6.29 | 4.5 | pass |
+| admin | dark | `accent-text` #c4b5fd | `surface-sunken` #0c1524 | 9.91 | 4.5 | pass |
+| admin | dark | `accent-2-text` #67e8f9 | `bg` #0c1524 | 12.62 | 4.5 | pass |
+| admin | dark | `accent-2-text` #67e8f9 | `surface` #1a2532 | 10.69 | 4.5 | pass |
+| admin | dark | `accent-2-text` #67e8f9 | `surface-raised` #2c3a49 | 8.01 | 4.5 | pass |
+| admin | dark | `accent-2-text` #67e8f9 | `surface-sunken` #0c1524 | 12.62 | 4.5 | pass |
 | admin | dark | `success` #32d583 | `surface` #1a2532 | 8.11 | 4.5 | pass |
 | admin | dark | `success-subtle-ink` #6ce9a6 | `success-subtle` #053321 | 9.22 | 4.5 | pass |
 | admin | dark | `warning-subtle-ink` #fde047 | `warning-subtle` #422006 | 11.06 | 4.5 | pass |
@@ -172,6 +220,14 @@ Selecting a theme is one attribute on `<html>`:
 | mobistack | light | `accent-2` #0f766e | `surface` #faf8f4 | 5.16 | 3 | pass |
 | mobistack | light | `accent-2-ink` #ffffff | `accent-2` #0f766e | 5.47 | 4.5 | pass |
 | mobistack | light | `accent-2-subtle-ink` #115e59 | `accent-2-subtle` #f0fdfa | 7.27 | 4.5 | pass |
+| mobistack | light | `accent-text` #92400e | `bg` #f4f1ea | 6.29 | 4.5 | pass |
+| mobistack | light | `accent-text` #92400e | `surface` #faf8f4 | 6.68 | 4.5 | pass |
+| mobistack | light | `accent-text` #92400e | `surface-raised` #ffffff | 7.09 | 4.5 | pass |
+| mobistack | light | `accent-text` #92400e | `surface-sunken` #e9e3d7 | 5.55 | 4.5 | pass |
+| mobistack | light | `accent-2-text` #115e59 | `bg` #f4f1ea | 6.72 | 4.5 | pass |
+| mobistack | light | `accent-2-text` #115e59 | `surface` #faf8f4 | 7.15 | 4.5 | pass |
+| mobistack | light | `accent-2-text` #115e59 | `surface-raised` #ffffff | 7.58 | 4.5 | pass |
+| mobistack | light | `accent-2-text` #115e59 | `surface-sunken` #e9e3d7 | 5.93 | 4.5 | pass |
 | mobistack | light | `success` #027a48 | `surface` #faf8f4 | 5.10 | 4.5 | pass |
 | mobistack | light | `success-subtle-ink` #05603a | `success-subtle` #ecfdf3 | 7.26 | 4.5 | pass |
 | mobistack | light | `warning-subtle-ink` #854d0e | `warning-subtle` #fefce8 | 6.62 | 4.5 | pass |
@@ -195,6 +251,14 @@ Selecting a theme is one attribute on `<html>`:
 | mobistack | dark | `accent-2` #2dd4bf | `surface` #221f1a | 8.82 | 3 | pass |
 | mobistack | dark | `accent-2-ink` #042f2e | `accent-2` #2dd4bf | 7.77 | 4.5 | pass |
 | mobistack | dark | `accent-2-subtle-ink` #5eead4 | `accent-2-subtle` #042f2e | 9.78 | 4.5 | pass |
+| mobistack | dark | `accent-text` #fcd34d | `bg` #12100e | 13.17 | 4.5 | pass |
+| mobistack | dark | `accent-text` #fcd34d | `surface` #221f1a | 11.39 | 4.5 | pass |
+| mobistack | dark | `accent-text` #fcd34d | `surface-raised` #35312c | 8.95 | 4.5 | pass |
+| mobistack | dark | `accent-text` #fcd34d | `surface-sunken` #12100e | 13.17 | 4.5 | pass |
+| mobistack | dark | `accent-2-text` #5eead4 | `bg` #12100e | 12.83 | 4.5 | pass |
+| mobistack | dark | `accent-2-text` #5eead4 | `surface` #221f1a | 11.10 | 4.5 | pass |
+| mobistack | dark | `accent-2-text` #5eead4 | `surface-raised` #35312c | 8.72 | 4.5 | pass |
+| mobistack | dark | `accent-2-text` #5eead4 | `surface-sunken` #12100e | 12.83 | 4.5 | pass |
 | mobistack | dark | `success` #32d583 | `surface` #221f1a | 8.59 | 4.5 | pass |
 | mobistack | dark | `success-subtle-ink` #6ce9a6 | `success-subtle` #053321 | 9.22 | 4.5 | pass |
 | mobistack | dark | `warning-subtle-ink` #fde047 | `warning-subtle` #422006 | 11.06 | 4.5 | pass |
@@ -218,6 +282,14 @@ Selecting a theme is one attribute on `<html>`:
 | mailroom | light | `accent-2` #0f766e | `surface` #faf8f4 | 5.16 | 3 | pass |
 | mailroom | light | `accent-2-ink` #ffffff | `accent-2` #0f766e | 5.47 | 4.5 | pass |
 | mailroom | light | `accent-2-subtle-ink` #115e59 | `accent-2-subtle` #f0fdfa | 7.27 | 4.5 | pass |
+| mailroom | light | `accent-text` #713024 | `bg` #f4f1ea | 8.66 | 4.5 | pass |
+| mailroom | light | `accent-text` #713024 | `surface` #faf8f4 | 9.21 | 4.5 | pass |
+| mailroom | light | `accent-text` #713024 | `surface-raised` #ffffff | 9.77 | 4.5 | pass |
+| mailroom | light | `accent-text` #713024 | `surface-sunken` #e9e3d7 | 7.64 | 4.5 | pass |
+| mailroom | light | `accent-2-text` #115e59 | `bg` #f4f1ea | 6.72 | 4.5 | pass |
+| mailroom | light | `accent-2-text` #115e59 | `surface` #faf8f4 | 7.15 | 4.5 | pass |
+| mailroom | light | `accent-2-text` #115e59 | `surface-raised` #ffffff | 7.58 | 4.5 | pass |
+| mailroom | light | `accent-2-text` #115e59 | `surface-sunken` #e9e3d7 | 5.93 | 4.5 | pass |
 | mailroom | light | `success` #027a48 | `surface` #faf8f4 | 5.10 | 4.5 | pass |
 | mailroom | light | `success-subtle-ink` #05603a | `success-subtle` #ecfdf3 | 7.26 | 4.5 | pass |
 | mailroom | light | `warning-subtle-ink` #854d0e | `warning-subtle` #fefce8 | 6.62 | 4.5 | pass |
@@ -241,6 +313,14 @@ Selecting a theme is one attribute on `<html>`:
 | mailroom | dark | `accent-2` #2dd4bf | `surface` #221f1a | 8.82 | 3 | pass |
 | mailroom | dark | `accent-2-ink` #042f2e | `accent-2` #2dd4bf | 7.77 | 4.5 | pass |
 | mailroom | dark | `accent-2-subtle-ink` #5eead4 | `accent-2-subtle` #042f2e | 9.78 | 4.5 | pass |
+| mailroom | dark | `accent-text` #dda894 | `bg` #12100e | 9.13 | 4.5 | pass |
+| mailroom | dark | `accent-text` #dda894 | `surface` #221f1a | 7.90 | 4.5 | pass |
+| mailroom | dark | `accent-text` #dda894 | `surface-raised` #35312c | 6.21 | 4.5 | pass |
+| mailroom | dark | `accent-text` #dda894 | `surface-sunken` #12100e | 9.13 | 4.5 | pass |
+| mailroom | dark | `accent-2-text` #5eead4 | `bg` #12100e | 12.83 | 4.5 | pass |
+| mailroom | dark | `accent-2-text` #5eead4 | `surface` #221f1a | 11.10 | 4.5 | pass |
+| mailroom | dark | `accent-2-text` #5eead4 | `surface-raised` #35312c | 8.72 | 4.5 | pass |
+| mailroom | dark | `accent-2-text` #5eead4 | `surface-sunken` #12100e | 12.83 | 4.5 | pass |
 | mailroom | dark | `success` #32d583 | `surface` #221f1a | 8.59 | 4.5 | pass |
 | mailroom | dark | `success-subtle-ink` #6ce9a6 | `success-subtle` #053321 | 9.22 | 4.5 | pass |
 | mailroom | dark | `warning-subtle-ink` #fde047 | `warning-subtle` #422006 | 11.06 | 4.5 | pass |

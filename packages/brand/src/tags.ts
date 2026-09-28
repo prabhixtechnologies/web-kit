@@ -37,3 +37,54 @@ export function toneFor(seed: string): TagTone {
   // Skips index 0, the neutral swatch, which is reserved for 'no category'.
   return TAG_TONES[1 + (hash % (TAG_TONES.length - 1))];
 }
+
+/**
+ * The resolved hex for each swatch, for the few places that cannot use a CSS variable.
+ *
+ * Prefer `var(--px-tag-<tone>-bg)` and `-ink` everywhere you can: those follow the mode,
+ * and these do not. This exists for values that leave the stylesheet — a colour written to
+ * the database, an `<input type="color">`, a third-party SDK that takes a hex string. Both
+ * modes are given so a caller storing one can also show the other correctly.
+ *
+ * Every ink is asserted AA against its own bg by the contrast gate. Nothing is asserted
+ * about an ink on any other background, so do not pair them across tones.
+ */
+export const TAG_SWATCHES: Record<
+  "light" | "dark",
+  Record<TagTone, { bg: string; ink: string; border: string }>
+> = {
+  light: {
+    neutral: { bg: "#eef2f7", ink: "#2c3a49", border: "#dfe6ef" },
+    red: { bg: "#fee4e2", ink: "#912018", border: "#fecdca" },
+    rose: { bg: "#ffe4e6", ink: "#9f1239", border: "#fecdd3" },
+    pink: { bg: "#fce7f3", ink: "#9d174d", border: "#fbcfe8" },
+    fuchsia: { bg: "#fae8ff", ink: "#86198f", border: "#f5d0fe" },
+    violet: { bg: "#ede9fe", ink: "#5b21b6", border: "#ddd6fe" },
+    indigo: { bg: "#e0e7ff", ink: "#3730a3", border: "#c7d2fe" },
+    blue: { bg: "#dbeafe", ink: "#1e40af", border: "#bfdbfe" },
+    cyan: { bg: "#cffafe", ink: "#155e75", border: "#a5f3fc" },
+    teal: { bg: "#ccfbf1", ink: "#115e59", border: "#99f6e4" },
+    green: { bg: "#d1fadf", ink: "#05603a", border: "#a6f4c5" },
+    lime: { bg: "#ecfccb", ink: "#3f6212", border: "#d9f99d" },
+    yellow: { bg: "#fef9c3", ink: "#854d0e", border: "#fef08a" },
+    ochre: { bg: "#fef3c7", ink: "#92400e", border: "#fde68a" },
+    clay: { bg: "#f6e6df", ink: "#713024", border: "#ecccbe" },
+  },
+  dark: {
+    neutral: { bg: "#0c1524", ink: "#c8d4e1", border: "#1a2532" },
+    red: { bg: "#55160c", ink: "#fda29b", border: "#7a271a" },
+    rose: { bg: "#4c0519", ink: "#fda4af", border: "#881337" },
+    pink: { bg: "#500724", ink: "#f9a8d4", border: "#831843" },
+    fuchsia: { bg: "#4a044e", ink: "#f0abfc", border: "#701a75" },
+    violet: { bg: "#2e1065", ink: "#c4b5fd", border: "#4c1d95" },
+    indigo: { bg: "#1e1b4b", ink: "#a5b4fc", border: "#312e81" },
+    blue: { bg: "#172554", ink: "#93c5fd", border: "#1e3a8a" },
+    cyan: { bg: "#083344", ink: "#67e8f9", border: "#164e63" },
+    teal: { bg: "#042f2e", ink: "#5eead4", border: "#134e4a" },
+    green: { bg: "#053321", ink: "#6ce9a6", border: "#054f31" },
+    lime: { bg: "#1a2e05", ink: "#bef264", border: "#365314" },
+    yellow: { bg: "#422006", ink: "#fde047", border: "#713f12" },
+    ochre: { bg: "#451a03", ink: "#fcd34d", border: "#78350f" },
+    clay: { bg: "#331512", ink: "#dda894", border: "#5c2a20" },
+  },
+};

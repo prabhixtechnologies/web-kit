@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  web-kit:
+    name: Tokens, contrast and types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The gate this repository exists for. Recomputes every generated artifact from
+      # tokens.json and fails if a checked-in copy differs, then asserts every semantic role
+      # pair, every tag swatch and every categorical series against WCAG AA.
+      #
+      # Only the artifacts this repository owns are checked here. The copies in Identity,
+      # Infra and Mobile live in other repositories and are verified by their own CI, which
+      # clones this one alongside its checkout; see the "Design tokens in sync" step there.
+      - name: Tokens in sync and contrast gate
+        run: npm run check --workspace @prabhix/brand
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test --workspace @prabhix/oidc-client

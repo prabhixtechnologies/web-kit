@@ -5,7 +5,9 @@
   "description": "Prabhix design tokens, Tailwind preset and SVG marks. Token source: tokens.json.",
   "scripts": {
     "build": "node scripts/build-tokens.mjs",
-    "check": "node scripts/build-tokens.mjs --check"
+    "check": "node scripts/build-tokens.mjs --check && node scripts/check-literals.mjs",
+    "check:tokens": "node scripts/build-tokens.mjs --check",
+    "check:literals": "node scripts/check-literals.mjs"
   },
   "exports": {
     ".": {
