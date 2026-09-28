@@ -112,6 +112,25 @@ const SHADCN_NAMES = [
   "input",
 ];
 
+/**
+ * The Dart form of the stock-palette rule, and the fourth way a colour gets hard-coded.
+ *
+ * `Colors.red` is Flutter's equivalent of `bg-red-500` from the stock Tailwind palette: no hex
+ * appears on the line, so the pattern above passes it, and the value is Material's own red
+ * rather than this system's — theme-blind, and identical in light and dark. The argument is the
+ * same one made for the class rule, only stronger, because all four apps ship both themes.
+ *
+ * `Color.fromARGB` and `Color.fromRGBO` are the same literal written in decimal.
+ * `Color.fromARGB(255, 239, 68, 68)` is `#EF4444` and evades a rule looking for `0x`.
+ *
+ * `transparent` is the one exception, and not really a colour: it means "no fill", it is what
+ * Flutter wants for a Material surface tint or a scaffold behind a gradient, and it is the only
+ * named colour the four apps use — thirty-three times, all of them correct. Ramp names are not
+ * excepted, because Dart has no `Colors.accent`: tokens arrive as `Px.accent`, which does not
+ * match this at all.
+ */
+const DART_COLOUR = /\bColors\.(?!transparent\b)[a-z]\w*|\bColor\.from(?:ARGB|RGBO)\s*\(/;
+
 /** Utilities that take a colour. Deliberately not every one — these are the ones in use. */
 const COLOUR_UTILITIES =
   "bg|text|border|ring|fill|stroke|from|to|via|decoration|outline|shadow|accent|caret|divide|placeholder";
@@ -295,12 +314,14 @@ for (const root of roots) {
     scanned += 1;
     const lines = text.split(/\r?\n/);
     const commented = blockCommentLines(lines);
-    const stylable = palette && extname(path) !== ".dart";
+    const isDart = extname(path) === ".dart";
+    const stylable = palette && !isDart;
     lines.forEach((line, i) => {
       const hex = PATTERN.test(line);
       // `lastIndex` survives a global regex between calls, so it is reset rather than shared.
       const classes = stylable ? ((palette.pattern.lastIndex = 0), palette.pattern.exec(line)) : null;
-      if (!hex && !classes) return;
+      const material = isDart ? DART_COLOUR.exec(line) : null;
+      if (!hex && !classes && !material) return;
       if (isComment(line) || commented.has(i)) return;
       if (isAllowed(lines, i, commented)) return;
       findings.push({
@@ -308,7 +329,11 @@ for (const root of roots) {
         path: relative(root, path).split(sep).join("/"),
         line: i + 1,
         text: line.trim(),
-        what: hex ? "literal" : `stock Tailwind class \`${classes[0]}\``,
+        what: hex
+          ? "literal"
+          : classes
+            ? `stock Tailwind class \`${classes[0]}\``
+            : `Material palette colour \`${material[0]}\``,
       });
     });
   }
