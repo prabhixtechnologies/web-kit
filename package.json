@@ -13,5 +13,21 @@
     "build": "npm run build --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm test --workspaces --if-present"
+  },
+  "//": [
+    "React lives here rather than in packages/ui, and is a peer dependency there.",
+    "",
+    "When packages/ui declared react as both a peer and a dev dependency, npm satisfied the peer",
+    "with a second copy inside packages/ui/node_modules. Apps consume this package through a",
+    "`file:` link, so their bundler followed the link and found that copy - two Reacts in one",
+    "process, which fails as `Cannot read properties of null (reading 'useState')` and reads like",
+    "a bug in whichever component happens to render first. OneOps has `dedupe: ['react']` for this",
+    "reason and it was not enough under Vitest.",
+    "",
+    "Declared once, at the root, there is nothing to nest."
+  ],
+  "devDependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   }
 }

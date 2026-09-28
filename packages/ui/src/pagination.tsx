@@ -10,7 +10,7 @@ import { cn } from "./cn";
  * cursor pager for a feed with no total, so it can only offer next and previous. This needs to
  * know how many there are, and in exchange it lets someone jump.
  */
-export interface PaginationProps extends Omit<React.ComponentProps<"nav">, "onChange"> {
+export interface PaginationProps extends Omit<React.ComponentPropsWithoutRef<"nav">, "onChange"> {
   page: number;
   pageCount: number;
   onPageChange: (page: number) => void;

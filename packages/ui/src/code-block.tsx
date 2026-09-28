@@ -27,7 +27,7 @@ const CodeBlock = React.forwardRef<HTMLElement, CodeBlockProps>(
     const lines = React.useMemo(() => code.replace(/\n$/, "").split("\n"), [code]);
     return (
       <figure
-        ref={ref as React.Ref<HTMLElement>}
+          ref={ref}
         className={cn("overflow-hidden rounded-xl border border-border bg-surface-muted", className)}
         {...props}
       >

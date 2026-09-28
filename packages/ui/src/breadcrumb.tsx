@@ -71,7 +71,7 @@ const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentPropsWit
 BreadcrumbPage.displayName = "BreadcrumbPage";
 
 /** Decoration between crumbs, and hidden from the accessibility tree for that reason. */
-const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<"li">) => (
+const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentPropsWithoutRef<"li">) => (
   <li
     role="presentation"
     aria-hidden
@@ -88,7 +88,7 @@ BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
  * the hidden crumbs open in a menu or simply are not reachable, and a control that does nothing
  * is worse than a mark that says "there is more".
  */
-const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
+const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentPropsWithoutRef<"span">) => (
   <span role="presentation" className={cn("flex size-5 items-center justify-center", className)} {...props}>
     <MoreHorizontal className="size-4" aria-hidden />
     <span className="sr-only">Hidden levels</span>

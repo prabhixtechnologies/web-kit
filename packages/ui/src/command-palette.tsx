@@ -25,7 +25,7 @@ import { useHotkey } from "./use-hotkeys";
   palette at all - it is meaningless anywhere else.
 */
 
-export interface Command {
+export interface PaletteCommand {
   id: string;
   label: string;
   /** Shown under the label. Use it for the disambiguation, not for a second sentence. */
@@ -43,14 +43,14 @@ export interface Command {
 }
 
 interface Registry {
-  register: (commands: Command[]) => () => void;
+  register: (commands: PaletteCommand[]) => () => void;
   open: () => void;
   close: () => void;
   toggle: () => void;
 }
 
 const RegistryContext = React.createContext<Registry | null>(null);
-const CommandsContext = React.createContext<Command[]>([]);
+const CommandsContext = React.createContext<PaletteCommand[]>([]);
 
 /**
  * Publishes commands for as long as the calling component is mounted.
@@ -65,7 +65,7 @@ const CommandsContext = React.createContext<Command[]>([]);
  * `deps` works like any other hook's: list what the commands close over. Without it, an inline
  * array re-registers every render.
  */
-export function useCommands(commands: Command[], deps: React.DependencyList = []) {
+export function useCommands(commands: PaletteCommand[], deps: React.DependencyList = []) {
   const registry = React.useContext(RegistryContext);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const memoised = React.useMemo(() => commands, deps);
@@ -90,7 +90,7 @@ export function useCommandPalette() {
 export interface CommandPaletteProviderProps {
   children: React.ReactNode;
   /** Always available, wherever you are. Navigation, sign out, theme. */
-  staticCommands?: Command[];
+  staticCommands?: PaletteCommand[];
   placeholder?: string;
   /** Default `mod+k`. `mod+j` and `ctrl+shift+p` are the other two conventions. */
   hotkey?: string | string[];
@@ -105,9 +105,9 @@ export function CommandPaletteProvider({
   emptyMessage = "Nothing matches that.",
 }: CommandPaletteProviderProps) {
   const [open, setOpen] = React.useState(false);
-  const [dynamic, setDynamic] = React.useState<Command[][]>([]);
+  const [dynamic, setDynamic] = React.useState<PaletteCommand[][]>([]);
 
-  const register = React.useCallback((commands: Command[]) => {
+  const register = React.useCallback((commands: PaletteCommand[]) => {
     setDynamic((previous) => [...previous, commands]);
     return () => setDynamic((previous) => previous.filter((group) => group !== commands));
   }, []);
@@ -155,7 +155,7 @@ export function useRegisteredCommands() {
 interface CommandPaletteProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  commands: Command[];
+  commands: PaletteCommand[];
   placeholder: string;
   emptyMessage: string;
 }
@@ -168,7 +168,7 @@ function CommandPalette({
   emptyMessage,
 }: CommandPaletteProps) {
   const grouped = React.useMemo(() => {
-    const groups = new Map<string, Command[]>();
+    const groups = new Map<string, PaletteCommand[]>();
     for (const command of commands) {
       const name = command.group ?? "";
       const bucket = groups.get(name);
