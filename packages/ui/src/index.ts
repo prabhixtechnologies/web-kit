@@ -8,6 +8,15 @@ export {
   type RowActionsProps,
   type ActionRisk,
 } from "./actions";
+export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "./accordion";
 export { Alert, Banner, type AlertProps, type AlertTone } from "./alert";
 export { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 export { Badge, badgeVariants, type BadgeProps } from "./badge";
@@ -61,8 +70,66 @@ export {
   ContextMenuRadioGroup,
 } from "./context-menu";
 export { TAG_TONES, toneFor, type TagTone } from "./tags";
+export {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+} from "./breadcrumb";
 export { Button, buttonVariants, type ButtonProps } from "./button";
+export {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  cardVariants,
+  type CardProps,
+} from "./card";
 export { Checkbox } from "./checkbox";
+export { CodeBlock, type CodeBlockProps } from "./code-block";
+export { Combobox, type ComboboxOption, type ComboboxProps } from "./combobox";
+export { CopyButton, type CopyButtonProps } from "./copy-button";
+export { FileDropzone, type FileDropzoneProps } from "./file-dropzone";
+export { HoverCard, HoverCardTrigger, HoverCardContent } from "./hover-card";
+export { Kbd, isApple, type KbdProps } from "./kbd";
+export { Pagination, pageItems, type PaginationProps } from "./pagination";
+export { RadioGroup, RadioGroupItem, RadioCard, type RadioCardProps } from "./radio-group";
+export { Resizable, type ResizableProps } from "./resizable";
+export { ScrollArea, type ScrollAreaProps } from "./scroll-area";
+export {
+  SegmentedControl,
+  type SegmentedOption,
+  type SegmentedControlProps,
+} from "./segmented-control";
+export {
+  Sheet,
+  SheetPortal,
+  SheetOverlay,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+  sheetVariants,
+  type SheetContentProps,
+} from "./sheet";
+export {
+  Spinner,
+  Progress,
+  spinnerVariants,
+  type SpinnerProps,
+  type ProgressProps,
+} from "./spinner";
+export { Stepper, type Step, type StepperProps } from "./stepper";
+export { Toggle, ToggleGroup, ToggleGroupItem, toggleVariants } from "./toggle-group";
+export { TreeView, type TreeNode, type TreeViewProps } from "./tree-view";
 export {
   Command,
   CommandDialog,

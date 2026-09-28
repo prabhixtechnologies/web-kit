@@ -41,4 +41,79 @@
   --color-destructive-foreground: var(--px-danger-ink);
 
   --color-ring: var(--px-focus);
+
+  /*
+    Height animations for the disclosure primitives. They belong here rather than in each app
+    because the utility name is baked into the component - `data-[state=open]:animate-
+    accordion-down` is in accordion.tsx, so an app that imports the primitive and not this
+    would get a section that snaps open with no transition, which reads as a bug rather than
+    as a preference.
+
+    The custom properties are Radix's: it measures the panel and publishes the height, which
+    is the only way to animate to `auto`. Every call site also carries `motion-reduce:
+    animate-none`, so this is the animation for people who want one.
+  */
+  --animate-accordion-down: accordion-down 200ms ease-out;
+  --animate-accordion-up: accordion-up 200ms ease-out;
+  --animate-collapsible-down: collapsible-down 200ms ease-out;
+  --animate-collapsible-up: collapsible-up 200ms ease-out;
+}
+
+/*
+  The scrollbar, tinted rather than replaced. `ScrollArea` carries this class.
+
+  Two syntaxes because no browser supports both: `scrollbar-color` is the standard and works in
+  Firefox and recent Chromium, the pseudo-elements cover Safari and older Chromium. Neither is
+  a fallback for the other - a browser that understands the standard property ignores the
+  pseudo-elements entirely.
+
+  Colours from the tokens, so the bar is light on a light page and dark on a dark one. The
+  default is the other way round in dark mode on some platforms, which is the whole reason to
+  touch this at all.
+*/
+.px-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--px-border-strong) transparent;
+}
+
+.px-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.px-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.px-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--px-border-strong);
+  /* A transparent border with background-clip is how a webkit thumb gets inset padding. */
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+.px-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--px-ink-faint);
+  background-clip: content-box;
+}
+
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+@keyframes collapsible-down {
+  from { height: 0; }
+  to { height: var(--radix-collapsible-content-height); }
+}
+
+@keyframes collapsible-up {
+  from { height: var(--radix-collapsible-content-height); }
+  to { height: 0; }
 }
