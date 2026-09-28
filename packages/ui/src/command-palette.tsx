@@ -209,14 +209,14 @@ function CommandPalette({
                   }}
                 >
                   {command.icon ? (
-                    <span className="mr-2 flex size-4 items-center justify-center text-muted">
+                    <span className="mr-2 flex size-4 items-center justify-center text-text-muted">
                       {command.icon}
                     </span>
                   ) : null}
                   <span className="flex min-w-0 flex-col">
                     <span className="truncate">{command.label}</span>
                     {command.description ? (
-                      <span className="truncate text-xs text-muted">{command.description}</span>
+                      <span className="truncate text-xs text-text-muted">{command.description}</span>
                     ) : null}
                   </span>
                   {command.shortcut ? <CommandShortcut>{command.shortcut}</CommandShortcut> : null}
