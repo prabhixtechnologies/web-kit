@@ -19,6 +19,23 @@ Selecting a theme is one attribute on `<html>`:
 <html data-brand="mobistack" data-theme="dark" data-density="compact">
 ```
 
+`data-brand` also works below the root, which is how one page shows several products
+without any of them borrowing the host's colour:
+
+```html
+<article data-brand="oneops">   <!-- indigo -->
+<article data-brand="mobistack"><!-- amber, on the same page -->
+```
+
+Everything inside takes that product's palette, surfaces included, in whichever mode
+the page is in. Every accent is contrast-asserted against every surface in the table
+below, including surfaces belonging to a different brand, so the pairing a card like
+this creates is already covered.
+
+Borrowing only a hue — one label in a list, a dot beside a row — wants
+`--px-brand-<name>` and its `-text` / `-ink` companions instead, which leave the
+host's surfaces alone.
+
 ## Contrast audit — 310 assertions, 0 failing
 
 | Theme | Mode | Foreground | Background | Ratio | Min | |
