@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Field, FieldControl, FieldError, FieldHint, FieldLabel, Form } from "./form";
+// No FieldError here on purpose: the error text is passed to Field, which renders it. A test
+// that imported the component would be testing a path the call sites do not take.
+import { Field, FieldControl, FieldHint, FieldLabel, Form } from "./form";
 import { Input } from "./input";
 
 /*
