@@ -4,7 +4,8 @@
   "type": "module",
   "description": "Prabhix design tokens, Tailwind preset and SVG marks. Token source: tokens.json.",
   "scripts": {
-    "build": "node scripts/build-tokens.mjs",
+    "build": "node scripts/build-tokens.mjs && tsup",
+    "build:tokens": "node scripts/build-tokens.mjs",
     "check": "node scripts/build-tokens.mjs --check && node scripts/check-literals.mjs && node scripts/check-mojibake.mjs",
     "check:tokens": "node scripts/build-tokens.mjs --check",
     "check:literals": "node scripts/check-literals.mjs",
@@ -22,7 +23,22 @@
     "./tailwind-preset.css": "./tailwind-preset.css",
     "./marks/*": "./marks/*"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js",
+        "default": "./dist/index.js"
+      },
+      "./tokens.json": "./tokens.json",
+      "./prabhix-tokens.css": "./prabhix-tokens.css",
+      "./tailwind-preset.css": "./tailwind-preset.css",
+      "./marks/*": "./marks/*"
+    }
+  },
   "files": [
+    "dist",
     "tokens.json",
     "prabhix-tokens.css",
     "tailwind-preset.css",
@@ -33,5 +49,8 @@
   ],
   "sideEffects": [
     "*.css"
-  ]
+  ],
+  "devDependencies": {
+    "tsup": "^8.5.1"
+  }
 }

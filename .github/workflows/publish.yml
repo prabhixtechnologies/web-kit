@@ -1,0 +1,88 @@
+name: Publish
+
+# Publishes @prabhix/brand and @prabhix/ui to GitHub Packages.
+#
+# The seven consuming repositories currently clone this one beside their own checkout at a pinned
+# WEBKIT_REF and compile the sources. That works, and it costs a clone on every CI run plus a pin
+# that has to be bumped by hand in four workflow files every time anything here changes -- which
+# has already gone wrong: the pins went stale, and the apps were tested against a web-kit that was
+# not the one being shipped.
+#
+# A version range fixes the pin problem properly, because Dependabot can move it. GitHub Packages
+# rather than S3 for the same reason: a tarball at a URL is still a hand-edited pin in seven
+# repositories, so it would move the chore rather than remove it. Bandwidth from Actions to GitHub
+# Packages is not billed, which matters here -- these repositories are on metered billing.
+#
+# Releasing is deliberately manual and tag-driven. Publishing on every push to main would make the
+# version meaningless and give consumers no way to stay still while something settles.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Pack and inspect without publishing"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+          scope: "@prabhix"
+
+      - run: npm ci
+
+      # The gates run here as well as in ci.yml. A tag can point at a commit that never went
+      # through a pull request, and a published version cannot be taken back -- npm allows
+      # unpublish only within 72 hours, and a consumer that has already resolved it keeps the
+      # bad copy in its lockfile regardless.
+      - name: Gates
+        run: npm run check --workspace @prabhix/brand
+
+      - name: Test
+        run: npm test --workspaces --if-present
+
+      - name: Build
+        run: npm run build --workspaces --if-present
+
+      # The generator writes into sibling repositories when they are present and into this one
+      # when they are not. On a runner there are no siblings, so a dirty tree here means the
+      # committed CSS does not match tokens.json -- publishing it would ship tokens that no
+      # consumer could reproduce.
+      - name: Generated output is committed
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::Generated files differ from what is committed. Run 'npm run build --workspace @prabhix/brand' and commit the result."
+            git --no-pager diff --stat
+            exit 1
+          fi
+
+      - name: Pack
+        run: |
+          for pkg in brand ui; do
+            echo "--- @prabhix/$pkg ---"
+            npm pack --workspace "@prabhix/$pkg" --dry-run
+          done
+
+      - name: Publish
+        if: github.event_name == 'push' || inputs.dry_run == false
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for pkg in brand ui; do
+            # Already-published is the ordinary case when a tag is re-run, and is not a failure.
+            npm publish --workspace "@prabhix/$pkg" --access restricted \
+              || echo "::warning::@prabhix/$pkg not published; this version most likely exists already."
+          done

@@ -11,13 +11,37 @@
     },
     "./preset.css": "./src/preset.css"
   },
+  "//publishConfig": [
+    "The exports above point at raw TypeScript, which is what a `file:` link wants: the app's",
+    "bundler follows the symlink and compiles the sources, so there is no build to run and no",
+    "dist to go stale while someone edits a primitive.",
+    "",
+    "A published tarball cannot work that way -- Vite's Rollup build does not transpile",
+    "TypeScript inside node_modules, and Next needs the package in `transpilePackages` -- so npm",
+    "rewrites these three fields at pack time to serve the compiled output instead. Local",
+    "development keeps the link and the fast path; consumers installing by version get ordinary",
+    "ESM with declarations. Neither has to know about the other."
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js",
+        "default": "./dist/index.js"
+      },
+      "./preset.css": "./dist/preset.css"
+    }
+  },
   "files": [
-    "src"
+    "src",
+    "dist"
   ],
   "sideEffects": [
     "*.css"
   ],
   "scripts": {
+    "build": "tsup",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
@@ -102,6 +126,7 @@
     "lucide-react": "0.511.0",
     "sonner": "2.0.5",
     "tailwind-merge": "3.3.0",
+    "tsup": "^8.5.1",
     "typescript": "5.8.3",
     "vitest": "^5.0.0"
   }

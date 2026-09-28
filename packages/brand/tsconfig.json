@@ -1,0 +1,24 @@
+{
+  "//": [
+    "This package had no tsconfig while it was only ever consumed through a `file:` link: each",
+    "app compiled the sources under its own settings and nothing here needed one.",
+    "",
+    "Generating declarations for a published tarball does need one. Without it the declaration",
+    "build falls back to a default `module`, and src/index.ts fails with TS1343 -- `marks` builds",
+    "its URLs from `import.meta.url`, which is only legal under an ES module setting. The symptom",
+    "is a dist with JavaScript and no .d.ts, which packs and installs quite happily and then gives",
+    "every consumer `any`."
+  ],
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "moduleDetection": "force"
+  },
+  "include": ["src"]
+}
