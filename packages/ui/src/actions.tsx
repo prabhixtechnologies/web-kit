@@ -46,11 +46,11 @@ export interface RowAction {
   /**
    * Awaited if it returns a promise, so the confirm dialog can hold its button disabled
    * until the mutation settles. The return value itself is ignored, which keeps call sites
-   * from having to wrap handlers that happen to return something â€” `toast.success` returns
+   * from having to wrap handlers that happen to return something — `toast.success` returns
    * an id, and a mutation returns its result.
    */
   onSelect: () => unknown;
-  /** Rendered right-aligned. Display only â€” binding the key is the surface's job. */
+  /** Rendered right-aligned. Display only — binding the key is the surface's job. */
   shortcut?: string;
   disabled?: boolean;
   risk?: ActionRisk;
@@ -184,7 +184,7 @@ function group(actions: RowAction[]): RowAction[][] {
  * action to the array adds it to every route at once, which is the only way a portfolio this
  * size keeps them in agreement.
  *
- * Gestures are shortcuts here, never the only path. See Infra/docs/UX-STANDARD.md Â§ 3.6.
+ * Gestures are shortcuts here, never the only path. See Infra/docs/UX-STANDARD.md § 3.6.
  */
 export function RowActions({ actions, children, label }: RowActionsProps) {
   const [pending, setPending] = React.useState<RowAction | null>(null);
@@ -257,7 +257,7 @@ export function RowActions({ actions, children, label }: RowActionsProps) {
               {pending?.confirm?.cancelLabel ?? "Cancel"}
             </Button>
             <Button variant="destructive" onClick={confirmPending} disabled={running}>
-              {running ? "Workingâ€¦" : (pending?.confirm?.confirmLabel ?? "Confirm")}
+              {running ? "Working…" : (pending?.confirm?.confirmLabel ?? "Confirm")}
             </Button>
           </DialogFooter>
         </DialogContent>

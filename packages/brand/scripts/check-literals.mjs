@@ -41,6 +41,12 @@ const TREES = [
   "Mobile/apps/mailroom/lib",
   "Mobile/apps/oneops/lib",
   "Mobile/apps/mobistack/lib",
+  // Not built by a bundler and not written in React, which is exactly why they need checking:
+  // hand-written CSS served straight to a browser is where a stale hex survives longest. Both
+  // are real public surfaces — the hosted sign-in pages, and store.prabhixtechnologies.com.
+  "Identity/src/main/resources/static/assets",
+  "Identity/src/main/resources/templates",
+  "Infra/deploy/app-store/www",
 ];
 
 const requested = process.argv.slice(2);
