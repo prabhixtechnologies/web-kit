@@ -9,6 +9,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { sibling } from "./siblings.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const pkg = resolve(here, "..");
@@ -671,19 +672,23 @@ const artifacts = [
   // registry when a consuming app links ui by path. Two generated copies of one function
   // cannot drift; a hand-maintained re-export across a package boundary would.
   ["web-kit", join(pkg, "src/tags.ts"), buildTagsTs()],
-  ["web-kit", join(repo, "web-kit/packages/ui/src/tags.ts"), buildTagsTs()],
-  ["Mobile", join(repo, "Mobile/packages/prabhix_theme/lib/src/prabhix_tokens.dart"), buildDart()],
-  ["Infra", join(repo, "Infra/design/prabhix-tokens.css"), buildCss()],
+  ["web-kit", sibling(repo, "web-kit/packages/ui/src/tags.ts"), buildTagsTs()],
+  ["Mobile", sibling(repo, "Mobile/packages/prabhix_theme/lib/src/prabhix_tokens.dart"), buildDart()],
+  ["Infra", sibling(repo, "Infra/design/prabhix-tokens.css"), buildCss()],
   // Served to the public by the app-store container, so it is a real surface and not a design
   // reference like the one above. It held a hand-written 68-line file that still described the
   // house cyan as the only accent and defined --px-house-* names nothing else has used for
   // months; generating it is the only way a page nobody opens while working stays current.
-  ["Infra", join(repo, "Infra/deploy/app-store/www/assets/prabhix-tokens.css"), buildCss()],
-  ["Identity", join(repo, "Identity/src/main/resources/static/assets/prabhix-tokens.css"), buildCss()],
+  ["Infra", sibling(repo, "Infra/deploy/app-store/www/assets/prabhix-tokens.css"), buildCss()],
+  ["Identity", sibling(repo, "Identity/src/main/resources/static/assets/prabhix-tokens.css"), buildCss()],
 ];
 
-/** web-kit is this checkout; a sibling counts as present only if its directory exists. */
-const present = (owner) => owner === "web-kit" || existsSync(join(repo, owner));
+/**
+ * web-kit is this checkout; a sibling counts as present only if its directory exists - under
+ * whatever case the clone arrived in, which on a runner is GitHub's spelling and not this
+ * workspace's. See scripts/siblings.mjs.
+ */
+const present = (owner) => owner === "web-kit" || existsSync(sibling(repo, owner));
 
 let drift = 0;
 const skipped = new Set();

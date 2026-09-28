@@ -19,6 +19,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, extname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { sibling } from "./siblings.mjs";
 
 const pkg = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const repo = resolve(pkg, "../../..");
@@ -54,7 +55,7 @@ const BROKEN = [
 ];
 
 const requested = process.argv.slice(2);
-const roots = requested.length ? requested : TREES.map((t) => join(repo, t)).filter(existsSync);
+const roots = requested.length ? requested : TREES.map((t) => sibling(repo, t)).filter(existsSync);
 
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {
@@ -116,6 +117,6 @@ if (findings.size > 0) {
 console.log(`no double-encoded text in ${files} file(s) across ${roots.length} tree(s)`);
 
 if (!requested.length) {
-  const missing = TREES.filter((t) => !existsSync(join(repo, t)));
+  const missing = TREES.filter((t) => !existsSync(sibling(repo, t)));
   if (missing.length) console.log(`not checked out (skipped): ${missing.join(", ")}`);
 }
