@@ -1,6 +1,7 @@
 name: Publish
 
-# Publishes @prabhixtechnologies/brand and @prabhixtechnologies/ui to GitHub Packages.
+# Publishes @prabhixtechnologies/brand, /ui and /oidc-client to GitHub Packages.
+# All three are live at 1.0.0.
 #
 # The seven consuming repositories currently clone this one beside their own checkout at a pinned
 # WEBKIT_REF and compile the sources. That works, and it costs a clone on every CI run plus a pin
@@ -96,12 +97,17 @@ jobs:
           # as that case: all three packages failed with 403 "owner not found", the step printed
           # a reassuring and wrong explanation, and the run went green having published nothing.
           # A publish step that cannot fail is worse than no publish step.
+          #
+          # Match the machine-readable codes first. The prose was tried on its own and got this
+          # wrong a second time: npm writes "Cannot publish over existing version" with a capital
+          # C, a case-sensitive grep missed it, and a successful no-op re-publish was reported as
+          # a failure. Hence E409/EPUBLISHCONFLICT, and -i on the prose fallback.
           set -uo pipefail
           failed=0
           for pkg in brand ui oidc-client; do
             out="$(npm publish --workspace "@prabhixtechnologies/$pkg" --access restricted 2>&1)" && continue
             echo "$out"
-            if grep -qE 'EPUBLISHCONFLICT|cannot publish over|previously published' <<<"$out"; then
+            if grep -qiE 'E409|409 Conflict|EPUBLISHCONFLICT|cannot publish over|previously published' <<<"$out"; then
               echo "::notice::@prabhixtechnologies/$pkg is already published at this version; nothing to do."
             else
               echo "::error::@prabhixtechnologies/$pkg failed to publish for a reason other than already existing."
