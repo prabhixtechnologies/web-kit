@@ -15,6 +15,17 @@ name: Publish
 #
 # Releasing is deliberately manual and tag-driven. Publishing on every push to main would make the
 # version meaningless and give consumers no way to stay still while something settles.
+#
+# BLOCKED: GitHub Packages resolves an npm scope to a GitHub owner of the same name. These
+# packages are scoped `@prabhix` and this account is `prabhixtechnologies`, so every publish
+# returns `403 Permission not_found: owner not found` -- for the scope, not for the token. The
+# first tagged run failed all three this way, and the step reported success because its error
+# handling assumed any failure meant the version already existed.
+#
+# There is no registry setting that fixes this. The options are to rename the scope to
+# `@prabhixtechnologies` (about 100 reference lines across seven repositories, and free), or to
+# use a registry that allows an arbitrary scope -- AWS CodeArtifact keeps the `@prabhix` name but
+# `codeartifact:*` is denied to the prabhix IAM user, so it needs setting up first.
 
 on:
   push:
@@ -81,8 +92,22 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Re-publishing an existing version is the one tolerable failure, and it has to be
+          # matched on rather than assumed. An earlier version of this step ended in
+          # `|| echo "::warning::...most likely exists already"`, which treated *every* failure
+          # as that case: all three packages failed with 403 "owner not found", the step printed
+          # a reassuring and wrong explanation, and the run went green having published nothing.
+          # A publish step that cannot fail is worse than no publish step.
+          set -uo pipefail
+          failed=0
           for pkg in brand ui oidc-client; do
-            # Already-published is the ordinary case when a tag is re-run, and is not a failure.
-            npm publish --workspace "@prabhix/$pkg" --access restricted \
-              || echo "::warning::@prabhix/$pkg not published; this version most likely exists already."
+            out="$(npm publish --workspace "@prabhix/$pkg" --access restricted 2>&1)" && continue
+            echo "$out"
+            if grep -qE 'EPUBLISHCONFLICT|cannot publish over|previously published' <<<"$out"; then
+              echo "::notice::@prabhix/$pkg is already published at this version; nothing to do."
+            else
+              echo "::error::@prabhix/$pkg failed to publish for a reason other than already existing."
+              failed=1
+            fi
           done
+          exit "$failed"
