@@ -31,12 +31,12 @@ jobs:
       # Infra and Mobile live in other repositories and are verified by their own CI, which
       # clones this one alongside its checkout; see the "Design tokens in sync" step there.
       - name: Tokens in sync and contrast gate
-        run: npm run check --workspace @prabhix/brand
+        run: npm run check --workspace @prabhixtechnologies/brand
 
       - name: Typecheck
         run: npm run typecheck
 
-      # Every workspace that has tests, rather than one named package. @prabhix/ui gained a
+      # Every workspace that has tests, rather than one named package. @prabhixtechnologies/ui gained a
       # suite with this change and a named list is how the next one gets left out.
       - name: Test
         run: npm test

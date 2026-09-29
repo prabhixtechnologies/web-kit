@@ -2,7 +2,7 @@
   The colour names the primitives in this package compile against.
 
   These are deliberately not the canonical token names. The canonical set lives in
-  @prabhix/brand and is what application code should use; this file exists because the
+  @prabhixtechnologies/brand and is what application code should use; this file exists because the
   primitives here follow the shadcn/ui component API, where `variant="destructive"` and
   `bg-primary` are part of the public surface that call sites are written against. Renaming
   them inside the package would mean rewriting every consumer for no gain.
@@ -14,8 +14,8 @@
   Import order matters. Tailwind and the brand preset both have to be in scope first:
 
     @import "tailwindcss";
-    @import "@prabhix/brand/tailwind-preset.css";
-    @import "@prabhix/ui/preset.css";
+    @import "@prabhixtechnologies/brand/tailwind-preset.css";
+    @import "@prabhixtechnologies/ui/preset.css";
 */
 
 /* `inline` so a `[data-brand]` scope reaches these. See build-tokens.mjs for why. */

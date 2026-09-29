@@ -1,6 +1,6 @@
 name: Publish
 
-# Publishes @prabhix/brand and @prabhix/ui to GitHub Packages.
+# Publishes @prabhixtechnologies/brand and @prabhixtechnologies/ui to GitHub Packages.
 #
 # The seven consuming repositories currently clone this one beside their own checkout at a pinned
 # WEBKIT_REF and compile the sources. That works, and it costs a clone on every CI run plus a pin
@@ -16,16 +16,14 @@ name: Publish
 # Releasing is deliberately manual and tag-driven. Publishing on every push to main would make the
 # version meaningless and give consumers no way to stay still while something settles.
 #
-# BLOCKED: GitHub Packages resolves an npm scope to a GitHub owner of the same name. These
-# packages are scoped `@prabhix` and this account is `prabhixtechnologies`, so every publish
-# returns `403 Permission not_found: owner not found` -- for the scope, not for the token. The
-# first tagged run failed all three this way, and the step reported success because its error
-# handling assumed any failure meant the version already existed.
+# Why the scope is `@prabhixtechnologies` and not the shorter `@prabhix`: GitHub Packages resolves
+# an npm scope to a GitHub owner of the same name. Under `@prabhix` every publish returned
+# `403 Permission not_found: owner not found` -- the scope was missing, not the token -- and no
+# registry setting changes that. The scope has to equal the account. Renaming it cost 230
+# references across eight repositories; the alternative was a registry that allows an arbitrary
+# scope, and `codeartifact:*` is denied to the prabhix IAM user.
 #
-# There is no registry setting that fixes this. The options are to rename the scope to
-# `@prabhixtechnologies` (about 100 reference lines across seven repositories, and free), or to
-# use a registry that allows an arbitrary scope -- AWS CodeArtifact keeps the `@prabhix` name but
-# `codeartifact:*` is denied to the prabhix IAM user, so it needs setting up first.
+# Do not shorten it back.
 
 on:
   push:
@@ -51,7 +49,7 @@ jobs:
         with:
           node-version: 22
           registry-url: https://npm.pkg.github.com
-          scope: "@prabhix"
+          scope: "@prabhixtechnologies"
 
       - run: npm ci
 
@@ -60,7 +58,7 @@ jobs:
       # unpublish only within 72 hours, and a consumer that has already resolved it keeps the
       # bad copy in its lockfile regardless.
       - name: Gates
-        run: npm run check --workspace @prabhix/brand
+        run: npm run check --workspace @prabhixtechnologies/brand
 
       - name: Test
         run: npm test --workspaces --if-present
@@ -75,7 +73,7 @@ jobs:
       - name: Generated output is committed
         run: |
           if [ -n "$(git status --porcelain)" ]; then
-            echo "::error::Generated files differ from what is committed. Run 'npm run build --workspace @prabhix/brand' and commit the result."
+            echo "::error::Generated files differ from what is committed. Run 'npm run build --workspace @prabhixtechnologies/brand' and commit the result."
             git --no-pager diff --stat
             exit 1
           fi
@@ -83,8 +81,8 @@ jobs:
       - name: Pack
         run: |
           for pkg in brand ui oidc-client; do
-            echo "--- @prabhix/$pkg ---"
-            npm pack --workspace "@prabhix/$pkg" --dry-run
+            echo "--- @prabhixtechnologies/$pkg ---"
+            npm pack --workspace "@prabhixtechnologies/$pkg" --dry-run
           done
 
       - name: Publish
@@ -101,12 +99,12 @@ jobs:
           set -uo pipefail
           failed=0
           for pkg in brand ui oidc-client; do
-            out="$(npm publish --workspace "@prabhix/$pkg" --access restricted 2>&1)" && continue
+            out="$(npm publish --workspace "@prabhixtechnologies/$pkg" --access restricted 2>&1)" && continue
             echo "$out"
             if grep -qE 'EPUBLISHCONFLICT|cannot publish over|previously published' <<<"$out"; then
-              echo "::notice::@prabhix/$pkg is already published at this version; nothing to do."
+              echo "::notice::@prabhixtechnologies/$pkg is already published at this version; nothing to do."
             else
-              echo "::error::@prabhix/$pkg failed to publish for a reason other than already existing."
+              echo "::error::@prabhixtechnologies/$pkg failed to publish for a reason other than already existing."
               failed=1
             fi
           done

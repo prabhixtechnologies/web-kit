@@ -151,7 +151,7 @@ function paletteRule(root) {
   const preset = join(pkg, "tailwind-preset.css");
   if (!existsSync(preset)) return null;
   // The ramps live in the generated preset and the shadcn-shaped aliases that map onto them
-  // live in @prabhix/ui. A name declared in either one resolves everywhere.
+  // live in @prabhixtechnologies/ui. A name declared in either one resolves everywhere.
   const shared = [preset, resolve(pkg, "../ui/src/preset.css")].filter(existsSync);
   const declared = new Set(shared.flatMap((f) => colourNames(readFileSync(f, "utf8"))));
   for (const file of walk(root)) {

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * Every app that links @prabhix/ui must declare all of its peer dependencies.
+ * Every app that links @prabhixtechnologies/ui must declare all of its peer dependencies.
  *
  * <p>Apps depend on this package with `file:`, and npm does not install a linked package's own
  * dependencies into the consumer - it assumes the link target's tree will serve. Vite's build
  * agrees, because it resolves through the symlink to the real path on disk. Vitest does not: it
  * inlines linked sources and resolves from the link path, inside the app's own node_modules.
  *
- * <p>So a package that @prabhix/ui needs but the app has not declared will build cleanly and
+ * <p>So a package that @prabhixtechnologies/ui needs but the app has not declared will build cleanly and
  * fail at test time, in whichever unrelated file happens to import the barrel first. That is how
  * this was found: adding an accordion primitive turned three OneOps test files red, none of them
  * about accordions, with "Failed to resolve import" pointing into node_modules.
@@ -34,7 +34,7 @@ const NOT_REQUIRED = new Set();
 
 const uiManifest = join(webKit, "packages", "ui", "package.json");
 if (!existsSync(uiManifest)) {
-  console.error(`No @prabhix/ui at ${uiManifest}.`);
+  console.error(`No @prabhixtechnologies/ui at ${uiManifest}.`);
   process.exit(1);
 }
 const peers = Object.entries(read(uiManifest).peerDependencies ?? {}).filter(
@@ -42,7 +42,7 @@ const peers = Object.entries(read(uiManifest).peerDependencies ?? {}).filter(
 );
 
 /**
- * Every package.json in a sibling checkout that depends on @prabhix/ui.
+ * Every package.json in a sibling checkout that depends on @prabhixtechnologies/ui.
  *
  * <p>Two levels deep is enough for the layout in use - `oneOps/web`, `Platform/marketing`,
  * `MobiStack/web` - without walking into node_modules or a Flutter tree.
@@ -80,7 +80,7 @@ function consumers() {
         continue;
       }
       const deps = { ...json.dependencies, ...json.devDependencies };
-      if (!deps["@prabhix/ui"]) continue;
+      if (!deps["@prabhixtechnologies/ui"]) continue;
       found.push({ name: json.name ?? `${owner}/${child}`, path: `${owner}/${child}`, deps, dir: join(dir, child) });
     }
   }
@@ -97,13 +97,13 @@ for (const app of apps) {
 
 if (apps.length === 0) {
   // Not a failure. web-kit is cloned on its own in its own CI job, with no siblings to check.
-  console.log("no sibling app depends on @prabhix/ui; nothing to check");
+  console.log("no sibling app depends on @prabhixtechnologies/ui; nothing to check");
   process.exit(0);
 }
 
 if (problems.length === 0) {
   console.log(
-    `all ${peers.length} @prabhix/ui peer(s) declared by ${apps.length} app(s): ${apps
+    `all ${peers.length} @prabhixtechnologies/ui peer(s) declared by ${apps.length} app(s): ${apps
       .map((app) => app.path)
       .join(", ")}`,
   );
@@ -113,7 +113,7 @@ if (problems.length === 0) {
 // The count of apps checked is printed on both paths. A gate that silently found nothing to
 // check looks identical to one that passed, and this repo has already shipped one of those.
 console.error(
-  `${problems.length} of ${apps.length} app(s) missing @prabhix/ui peer dependencies ` +
+  `${problems.length} of ${apps.length} app(s) missing @prabhixtechnologies/ui peer dependencies ` +
     `(${peers.length} peers, apps: ${apps.map((app) => app.path).join(", ")}):\n`,
 );
 for (const { app, missing } of problems) {
@@ -124,7 +124,7 @@ for (const { app, missing } of problems) {
 }
 console.error(
   "npm does not install a `file:` dependency's own packages into the consumer, so anything\n" +
-    "@prabhix/ui imports has to be declared by the app as well. The build resolves it through\n" +
+    "@prabhixtechnologies/ui imports has to be declared by the app as well. The build resolves it through\n" +
     "the symlink and passes; Vitest resolves from the link path and fails. Declare them.",
 );
 process.exit(1);

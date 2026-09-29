@@ -1,5 +1,5 @@
 {
-  "name": "@prabhix/brand",
+  "name": "@prabhixtechnologies/brand",
   "version": "1.0.0",
   "type": "module",
   "description": "Prabhix design tokens, Tailwind preset and SVG marks. Token source: tokens.json.",

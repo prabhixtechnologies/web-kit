@@ -5,7 +5,7 @@ import { defineConfig } from "tsup";
 // that was the right trade then: no build step, no stale `dist`, and each app's bundler compiled
 // the sources it followed through the symlink.
 //
-// Publishing changes it. A consumer resolving `@prabhix/ui` out of `node_modules` gets no
+// Publishing changes it. A consumer resolving `@prabhixtechnologies/ui` out of `node_modules` gets no
 // transpilation by default -- Vite's Rollup build does not compile TypeScript there, and Next
 // needs the package named in `transpilePackages` -- so raw sources would make every consumer
 // carry configuration to undo the choice. Shipping compiled ESM with declarations is what the
@@ -33,7 +33,7 @@ export default defineConfig({
   onSuccess: async () => {
     copyFileSync("src/preset.css", "dist/preset.css");
   },
-  external: [/^react($|\/)/, /^react-dom($|\/)/, /^@radix-ui\//, /^@prabhix\//],
+  external: [/^react($|\/)/, /^react-dom($|\/)/, /^@radix-ui\//, /^@prabhixtechnologies\//],
   // Preserved so a consumer importing one primitive does not pull the whole library into its
   // graph before tree-shaking gets a chance.
   splitting: true,

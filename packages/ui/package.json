@@ -1,5 +1,5 @@
 {
-  "name": "@prabhix/ui",
+  "name": "@prabhixtechnologies/ui",
   "version": "1.0.0",
   "type": "module",
   "description": "Shared React UI primitives for Prabhix product webs.",
@@ -69,7 +69,7 @@
     "",
     "Peers are therefore the only declaration that actually reaches the apps. The cost is that",
     "adding a primitive means adding its package in every app too, and the cost of forgetting",
-    "used to be a red test suite in an unrelated file. `check-peers.mjs` in @prabhix/brand runs in",
+    "used to be a red test suite in an unrelated file. `check-peers.mjs` in @prabhixtechnologies/brand runs in",
     "every repo's CI and fails with the exact npm command to run, so it is caught here instead.",
     "",
     "react and react-dom are peers for the ordinary reason as well: hooks read a dispatcher off a",

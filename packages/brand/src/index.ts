@@ -1,8 +1,8 @@
 /**
  * Prabhix brand assets.
  *
- * Tokens: `import "@prabhix/brand/prabhix-tokens.css"`
- * Marks: `import markUrl from "@prabhix/brand/marks/prabhix-mark.svg"`
+ * Tokens: `import "@prabhixtechnologies/brand/prabhix-tokens.css"`
+ * Marks: `import markUrl from "@prabhixtechnologies/brand/marks/prabhix-mark.svg"`
  *
  * Design source remains `Infra/design`. This package is a copy for product webs.
  */
