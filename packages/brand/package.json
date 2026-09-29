@@ -1,6 +1,6 @@
 {
   "name": "@prabhixtechnologies/brand",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "description": "Prabhix design tokens, Tailwind preset and SVG marks. Token source: tokens.json.",
   "scripts": {
@@ -11,6 +11,10 @@
     "check:literals": "node scripts/check-literals.mjs",
     "check:mojibake": "node scripts/check-mojibake.mjs",
     "fix:mojibake": "node scripts/fix-mojibake.mjs"
+  },
+  "bin": {
+    "prabhix-check-colours": "./scripts/check-literals.mjs",
+    "prabhix-check-mojibake": "./scripts/check-mojibake.mjs"
   },
   "exports": {
     ".": {
