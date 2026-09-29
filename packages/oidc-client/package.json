@@ -1,6 +1,6 @@
 {
   "name": "@prabhix/oidc-client",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "Browser PKCE client for Prabhix Identity.",
   "exports": {
@@ -10,15 +10,29 @@
       "default": "./src/index.ts"
     }
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js",
+        "default": "./dist/index.js"
+      }
+    }
+  },
   "files": [
-    "src"
+    "src",
+    "dist",
+    "!src/**/*.test.ts"
   ],
   "scripts": {
+    "build": "tsup",
     "test": "node --experimental-strip-types --test src/index.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^22.20.4",
+    "tsup": "^8.5.1",
     "typescript": "5.8.3"
   }
 }

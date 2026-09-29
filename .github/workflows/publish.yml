@@ -71,7 +71,7 @@ jobs:
 
       - name: Pack
         run: |
-          for pkg in brand ui; do
+          for pkg in brand ui oidc-client; do
             echo "--- @prabhix/$pkg ---"
             npm pack --workspace "@prabhix/$pkg" --dry-run
           done
@@ -81,7 +81,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for pkg in brand ui; do
+          for pkg in brand ui oidc-client; do
             # Already-published is the ordinary case when a tag is re-run, and is not a failure.
             npm publish --workspace "@prabhix/$pkg" --access restricted \
               || echo "::warning::@prabhix/$pkg not published; this version most likely exists already."

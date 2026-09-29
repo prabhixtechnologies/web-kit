@@ -1,6 +1,6 @@
 {
   "name": "@prabhix/ui",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "Shared React UI primitives for Prabhix product webs.",
   "exports": {
@@ -33,9 +33,21 @@
       "./preset.css": "./dist/preset.css"
     }
   },
+  "//files": [
+    "src is kept alongside dist so the published sourcemaps resolve to real sources when a",
+    "consumer steps into a primitive in the debugger.",
+    "",
+    "The tests are excluded. They import @testing-library, axe-core and vitest, which are dev",
+    "dependencies here and absent in every consumer, so shipping them puts unresolvable imports",
+    "in the tarball -- harmless while nothing reaches for them and a confusing failure the moment",
+    "something does, such as a consumer's own test runner globbing node_modules."
+  ],
   "files": [
     "src",
-    "dist"
+    "dist",
+    "!src/**/*.test.tsx",
+    "!src/**/*.test.ts",
+    "!src/test"
   ],
   "sideEffects": [
     "*.css"
