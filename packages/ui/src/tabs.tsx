@@ -11,7 +11,10 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex min-h-11 items-center justify-center rounded-lg bg-surface-muted p-1 text-text-muted",
+      // The strip is a control, so it takes the control height. `p-1` is 4px a side, and the
+      // trigger below subtracts that 8px so the strip lands on the token exactly rather than
+      // being pushed past it by its own contents — a min-height loses to a taller child.
+      "inline-flex min-h-[var(--px-density-control)] items-center justify-center rounded-lg bg-surface-muted p-1 text-text-muted",
       className,
     )}
     {...props}
@@ -26,7 +29,10 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex min-h-9 items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-surface transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-surface data-[state=active]:text-text data-[state=active]:shadow",
+      // The strip's height less its 8px of padding. Comfortable works out at the 36px this
+      // was before density existed, so nothing moves; compact gives 28px, which is short but
+      // still above the 24px AA pointer floor.
+      "inline-flex min-h-[calc(var(--px-density-control)-0.5rem)] items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-surface transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-surface data-[state=active]:text-text data-[state=active]:shadow",
       className,
     )}
     {...props}

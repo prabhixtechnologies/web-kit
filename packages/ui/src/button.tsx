@@ -25,16 +25,21 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       // All three sizes used to be min-h-11, so `sm` and `lg` changed nothing but the
-      // padding. 44px stays the default because it is the AAA pointer target (WCAG 2.5.5)
-      // and these consoles are used on tablets at a counter. `sm` and `xs` exist for
-      // toolbars and table rows, and stop at 32px — comfortably above the 24px AA floor
-      // (WCAG 2.5.8), which is the number that actually must not be crossed.
+      // padding. The default is now the density token: 44px comfortable, which is the AAA
+      // pointer target (WCAG 2.5.5) and the size these consoles want on a tablet at a
+      // counter, and 36px under `data-density="compact"`, which is still well clear of the
+      // 24px AA floor (WCAG 2.5.8) — the number that actually must not be crossed.
+      //
+      // Only the default and its icon form follow density. `xs`, `sm` and `lg` are explicit
+      // requests for a particular size, and a caller who asked for `sm` in a toolbar did not
+      // ask for it to shrink again; they stop at 32px for the same AA reason.
       size: {
-        default: "min-h-11 px-4 py-2",
+        default:
+          "min-h-[var(--px-density-control)] px-[var(--px-density-pad-x)] py-[var(--px-density-pad-y)]",
         xs: "min-h-8 rounded-md px-2 text-xs",
         sm: "min-h-9 rounded-lg px-3 text-xs",
         lg: "min-h-12 rounded-lg px-8 text-base",
-        icon: "size-11",
+        icon: "size-[var(--px-density-control)]",
         "icon-sm": "size-9",
       },
     },

@@ -13,7 +13,10 @@ const toggleVariants = cva(
         outline: "border border-border bg-transparent text-text-muted data-[state=on]:border-primary",
       },
       size: {
-        default: "min-h-11 px-3",
+        // Density, on the same reasoning as Button: the default follows the console, and the
+        // explicit sizes below stay put because a caller who asked for `sm` in a toolbar did
+        // not ask for it to shrink again.
+        default: "min-h-[var(--px-density-control)] px-3",
         sm: "min-h-9 px-2.5",
         // 32px, above the 24px AA pointer-target floor. Anything smaller belongs in a menu.
         xs: "min-h-8 px-2 text-xs",

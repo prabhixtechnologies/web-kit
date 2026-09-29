@@ -84,21 +84,33 @@ block that also answers `prefers-color-scheme: dark`. On a machine that prefers 
 gallery renders dark. `playwright.config.ts` pins it, and `open()` asserts the mode actually
 applied rather than trusting it.
 
-## A defect this found on its first run
+## A defect this found on its first run, since fixed
 
-`data-density="compact"` does nothing.
+`data-density="compact"` did nothing.
 
-It is set on `<html>` in all four applications — MobiStack ships `compact` — documented in
-`TOKENS.md`, and it generates five custom properties. Nothing reads them: searching all eight
-repositories for `--px-density-` finds only the lines in `build-tokens.mjs` that write it. The
-primitives size themselves with fixed Tailwind spacing, so `Button` is `min-h-11`, which is
-44px, while the token says a comfortable control is 40px and a compact one 32px.
-
-MobiStack has therefore been asking for compact and rendering comfortable since the tokens were
-introduced. It is the same shape as the bug at the top of this file: a generator producing
+It was set on `<html>`, documented in `TOKENS.md`, and generated five custom properties that
+nothing read: searching all eight repositories for `--px-density-` found only the lines in
+`build-tokens.mjs` that wrote it. The primitives sized themselves with fixed Tailwind spacing,
+so an application could ask for compact and render comfortable — and had done since the tokens
+were introduced. The same shape as the bug at the top of this file: a generator producing
 correct values that never reach paint.
 
-Wiring it through changes the control metrics of four shipped applications, so it is a decision
-rather than a repair. The test that asserts it is marked `test.fail` and left in place: when
-someone does wire it up, Playwright reports the unexpected pass, and that report is the
-notification that this section is out of date.
+Three things came out of fixing it that are worth keeping in mind.
+
+**A token that is read by nothing can hold any value, and will.** Comfortable said a control was
+40px while every control shipped at 44px, and compact said 32px. Nobody reconciled the two
+because there was nothing to reconcile — the number had no consequence. The fix took the sizes
+that had actually shipped: 44px comfortable, which is the WCAG 2.5.5 AAA pointer target that
+`button.tsx` chose deliberately, and 36px compact, which is a real reduction and still well
+clear of the 24px AA floor in 2.5.8.
+
+**A role name is not a value.** `bodyRole` emitted `--px-density-body-role: body-md`, and there
+is no `var(--px-text-var(--px-density-body-role))` — CSS cannot dereference a name, so that
+property was unusable by construction. `build-tokens.mjs` now resolves the role against
+`scale.type` and emits the size and line height it stands for. The role stays the authored form,
+because that is the real intent and it keeps in step with the type scale on its own.
+
+**Only a measured box proves a token works.** The test asserting that the custom properties
+change between modes passed throughout the whole period the feature was broken, because the
+properties were always correct. The tests that have teeth are the ones that measure a rendered
+control against the token and compare page heights between the two modes.

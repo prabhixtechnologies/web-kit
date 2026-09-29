@@ -14,7 +14,9 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-11 w-full items-center justify-between whitespace-nowrap rounded-md border border-border bg-surface px-3 py-2 text-sm shadow-sm ring-offset-surface placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      // Same control height as Input and the default Button: these three sit next to each
+      // other in every form, and a row where one of them is 8px taller reads as broken.
+      "flex h-[var(--px-density-control)] w-full items-center justify-between whitespace-nowrap rounded-md border border-border bg-surface px-[var(--px-density-pad-x)] py-2 text-sm shadow-sm ring-offset-surface placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className,
     )}
     {...props}

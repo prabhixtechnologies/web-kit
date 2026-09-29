@@ -1,13 +1,22 @@
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 import {
   ACCENT_DENSE,
   BRANDS,
+  type Density,
   difference,
   exactDifference,
   open,
   shoot,
   shootSection,
 } from "./harness";
+import { DENSITY_SCALE, px } from "./tokens";
+
+/** The rendered height of the first match, which is what a density token is a claim about. */
+async function box(page: Page, selector: string): Promise<number> {
+  const rect = await page.locator(selector).first().boundingBox();
+  if (!rect) throw new Error(`${selector} is not visible, so it cannot be measured`);
+  return Math.round(rect.height);
+}
 
 /*
   The tests this directory exists for.
@@ -109,20 +118,18 @@ test("the accent resolves to a different colour under each brand", async ({ page
 /*
   Density, which is where this suite earned itself on the first run.
 
-  `data-density="compact"` is set on <html> in all four applications - MobiStack ships compact -
-  documented in TOKENS.md, and it generates five custom properties. Nothing reads them. A search
-  for `--px-density-` across all eight repositories finds only the lines in build-tokens.mjs
-  that write it. The primitives size themselves with fixed Tailwind spacing: Button is
-  `min-h-11`, which is 44px, while the token says a comfortable control is 40px and a compact
-  one 32px.
+  `data-density="compact"` was set on <html>, documented in TOKENS.md, and generated five custom
+  properties that nothing read. A search for `--px-density-` across all eight repositories found
+  only the lines in build-tokens.mjs that wrote it. The primitives sized themselves with fixed
+  Tailwind spacing, so an application could ask for compact and render exactly like comfortable,
+  and had done since the tokens were introduced. The same shape as the single-colour bug: a
+  generator producing correct values that never reach paint, invisible to every gate because the
+  gates checked the values and not the pixels.
 
-  So MobiStack asks for compact and renders exactly like comfortable, and has done since the
-  tokens were introduced. This is the same shape as the single-colour bug: a generator producing
-  correct values that never reach paint, invisible to every gate because the gates check the
-  values and not the pixels.
-
-  Wiring it through changes the metrics of four shipped applications, so it is a decision rather
-  than a fix, and it is recorded here instead of being quietly skipped.
+  The tokens are wired into the primitives now, and two of the three tests below exist because
+  the first one was not enough on its own - it passed throughout the entire period the feature
+  was broken, since the custom properties were always correct. Only measuring a rendered box
+  distinguishes a token that works from one that is merely present.
 */
 /*
   The test that reproduces the original bug.
@@ -192,18 +199,56 @@ test.describe("density", () => {
       getComputedStyle(document.documentElement).getPropertyValue("--px-density-control").trim(),
     );
 
-    expect(compact).toBe("32px");
-    expect(roomy).toBe("40px");
+    expect(compact).toBe(DENSITY_SCALE.compact.control);
+    expect(roomy).toBe(DENSITY_SCALE.comfortable.control);
+  });
+
+  test("the controls are the height the tokens say they are", async ({ page }) => {
+    // The test that decides whether density is real. For most of this project's life the
+    // tokens above were emitted and read by nothing, so `data-density="compact"` was an
+    // attribute that changed five custom properties and not one pixel. Measuring the boxes
+    // is the only way to tell the difference: the values were always legible.
+    const bodyRows: Record<string, number> = {};
+
+    for (const [mode, tokens] of Object.entries(DENSITY_SCALE)) {
+      await open(page, { brand: "technologies", density: mode as Density });
+
+      const button = await box(page, '[data-shot="button-variants"] button');
+      expect(button, `default button under ${mode}`).toBe(px(tokens.control));
+
+      const input = await box(page, '[data-shot="text-inputs"] input');
+      expect(input, `input under ${mode}`).toBe(px(tokens.control));
+
+      // The header row is plain text, so it sits exactly on the floor the token sets.
+      const head = await box(page, '[data-shot="table-plain"] thead tr');
+      expect(head, `table header row under ${mode}`).toBe(px(tokens.row));
+
+      // A body row is only guaranteed to be *at least* the token: `h-` on a tr is a floor,
+      // and this table has a Badge in its status column. A badge is an inline label rather
+      // than a control, so it does not take the density height, and under compact its 23px
+      // plus 12px of cell padding clears the 34px row by one pixel. That is the row growing
+      // to fit its contents, which is what it should do.
+      const row = await box(page, '[data-shot="table-plain"] tbody tr');
+      expect(row, `table body row under ${mode}`).toBeGreaterThanOrEqual(px(tokens.row));
+      bodyRows[mode] = row;
+    }
+
+    expect(
+      bodyRows.compact,
+      `body rows: comfortable ${bodyRows.comfortable}px, compact ${bodyRows.compact}px`,
+    ).toBeLessThan(bodyRows.comfortable);
   });
 
   test("compact makes the page shorter", async ({ page }) => {
-    // Expected to fail, and left in rather than deleted: the day someone wires the density
-    // tokens into the primitives this starts passing, and Playwright reports the unexpected
-    // pass. That report is the notification that the defect above is fixed.
-    test.fail(true, "the primitives do not read --px-density-*; see the note above");
+    // The whole-page consequence of the heights above, and the cheapest guard against a
+    // future primitive that hardcodes its height again: one control going back to a fixed
+    // size would not fail the measurements above, but enough of them will fail this.
+    await open(page, { brand: "technologies", density: "comfortable" });
+    const roomy = await page.evaluate(() => document.documentElement.scrollHeight);
 
-    const roomy = await shoot(page, { brand: "technologies", density: "comfortable" });
-    const tight = await shoot(page, { brand: "technologies", density: "compact" });
-    expect(difference(roomy, tight)).toBeGreaterThan(0.005);
+    await open(page, { brand: "technologies", density: "compact" });
+    const tight = await page.evaluate(() => document.documentElement.scrollHeight);
+
+    expect(tight, `comfortable ${roomy}px, compact ${tight}px`).toBeLessThan(roomy);
   });
 });

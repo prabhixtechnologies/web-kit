@@ -6,10 +6,12 @@ export { BRANDS, DENSITY } from "./tokens";
 
 export const MODES = ["light", "dark"] as const;
 
+export type Density = "comfortable" | "compact";
+
 export interface View {
   brand: string;
   mode?: (typeof MODES)[number];
-  density?: "comfortable" | "compact";
+  density?: Density;
 }
 
 export function url({ brand, mode = "light", density = "comfortable" }: View) {

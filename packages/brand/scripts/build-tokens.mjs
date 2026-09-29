@@ -291,11 +291,11 @@ function buildCss() {
   for (const [k, v] of Object.entries(T.scale.breakpoint)) L.push(`  --px-bp-${k}: ${v};`);
 
   L.push("", "  /* density — comfortable is the default; see [data-density] below */");
-  for (const [k, v] of Object.entries(T.scale.density.comfortable)) L.push(`  --px-density-${kebab(k)}: ${v};`);
+  L.push(...densityLines(T.scale.density.comfortable));
   L.push("}", "");
 
   L.push(`[data-density="compact"] {`);
-  for (const [k, v] of Object.entries(T.scale.density.compact)) L.push(`  --px-density-${kebab(k)}: ${v};`);
+  L.push(...densityLines(T.scale.density.compact));
   L.push("}", "");
 
   // Brand-independent colours: the categorical series, the tag swatches, and each product's
@@ -715,6 +715,29 @@ function buildTagsTs() {
 }
 
 /* ---------- helpers ---------- */
+
+/**
+ * The custom properties for one density mode.
+ *
+ * Everything except `bodyRole` is already a value and is emitted as written. `bodyRole` is the
+ * name of a role in `scale.type`, and a name is the one thing a custom property cannot be used
+ * as: there is no `var(--px-text-var(--px-density-body-role))`, so the property CSS received was
+ * unusable and nothing ever read it. It is resolved here into the size and line height it stands
+ * for, which a utility can consume. The role stays the authored form because that is the real
+ * intent — compact uses body-sm — and it keeps in step with the type scale on its own.
+ */
+function densityLines(mode) {
+  const lines = [];
+  for (const [key, value] of Object.entries(mode)) {
+    if (key === "bodyRole") continue;
+    lines.push(`  --px-density-${kebab(key)}: ${value};`);
+  }
+  const role = T.scale.type[mode.bodyRole];
+  if (!role) throw new Error(`density bodyRole "${mode.bodyRole}" is not a role in scale.type`);
+  lines.push(`  --px-density-body-size: ${role.size};`);
+  lines.push(`  --px-density-body-line-height: ${role.lineHeight};`);
+  return lines;
+}
 
 function kebab(s) { return s.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase()); }
 function camel(s) { return s.replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase()); }
