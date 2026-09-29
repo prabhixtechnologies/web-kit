@@ -40,3 +40,43 @@ jobs:
       # suite with this change and a named list is how the next one gets left out.
       - name: Test
         run: npm test
+
+  visuals:
+    name: Visual invariants
+    runs-on: ubuntu-latest
+    # A separate job because it needs a browser download, and because it answers a different
+    # question: the job above checks that the token values are right, this one checks that they
+    # reach paint. The single-colour bug satisfied the first and failed the second.
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Chromium only. These tests compare renders against each other rather than against
+      # stored bytes, so a second engine would triple the runtime and answer the same question.
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+        working-directory: gallery
+
+      # No stored baselines: the assertions are that the five brands do not render alike, that
+      # dark is not light, and that a [data-brand] below the root takes its own accent. Nothing
+      # here depends on the platform's fonts, so it is the same answer on any machine.
+      - name: Visual invariants
+        run: npm run test:visual
+        working-directory: gallery
+
+      - name: Upload failure artefacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diffs
+          path: gallery/test-results/
+          retention-days: 7

@@ -7,12 +7,18 @@
   "workspaces": [
     "packages/brand",
     "packages/ui",
-    "packages/oidc-client"
+    "packages/oidc-client",
+    "gallery"
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "test": "npm test --workspaces --if-present"
+    "test": "npm test --workspaces --if-present",
+    "//test:visual": [
+      "Not part of `npm test`, because it needs a browser that `npm ci` does not install.",
+      "Run `npx playwright install chromium` once, then this."
+    ],
+    "test:visual": "npm run test:visual --workspace @prabhixtechnologies/gallery"
   },
   "//": [
     "React lives here rather than in packages/ui, and is a peer dependency there.",

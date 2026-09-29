@@ -1,6 +1,13 @@
 node_modules/
 dist/
 *.tsbuildinfo
+
+# Playwright run output. The baseline PNGs under gallery/tests are committed on purpose and are
+# not in here; these two are the traces, diffs and HTML report from a run.
+test-results/
+playwright-report/
+blob-report/
+.playwright/
 *.log
 npm-debug.log*
 .DS_Store

@@ -1,0 +1,32 @@
+{
+  "//": [
+    "Vite compiles this directory with esbuild, which strips types without checking them, so",
+    "without this file nothing verified that the gallery calls the primitives correctly. Writing",
+    "it turned up four wrong call sites that had built and rendered quite happily: a Field taking",
+    "`name` and `invalid`, which it does not have; a TablePager taking page props belonging to",
+    "Pagination; and a destructive menu item spelled as shadcn's `variant` rather than this",
+    "package's boolean.",
+    "",
+    "`resolveJsonModule` because the brand and mode lists are read from tokens.json rather than",
+    "restated here. The test directory is included: the harness is TypeScript too, and Playwright",
+    "transforms it the same way Vite does, with the same absence of checking."
+  ],
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "types": ["node"]
+  },
+  "include": ["src", "tests", "vite.config.ts", "playwright.config.ts"]
+}

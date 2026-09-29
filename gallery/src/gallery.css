@@ -1,0 +1,47 @@
+@import "tailwindcss";
+@import "@prabhixtechnologies/brand/tailwind-preset.css";
+@import "@prabhixtechnologies/ui/preset.css";
+
+/*
+  Tailwind v4 discovers utilities by scanning source files, and skips node_modules. The
+  primitives' own classes therefore have to be pointed at explicitly, exactly as oneOps does
+  with `@source "../node_modules/@prabhixtechnologies/ui/src"`. Here the workspace layout makes
+  the real path shorter, and using it rather than the symlink means a `npm install` that has not
+  yet linked does not silently produce a gallery with no styles.
+*/
+@source "../../packages/ui/src";
+
+/*
+  Everything below exists to make a screenshot reproducible. None of it is how the products
+  look; it is how a camera has to be held.
+*/
+
+/* Animation is the largest source of a screenshot that differs from itself. Playwright
+   disables CSS animation during a screenshot, but a transition already in flight when the
+   shot is taken is not covered, and Radix drives enter/exit states with both. */
+*,
+*::before,
+*::after {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+}
+
+/* A text caret blinks, which is a difference between two otherwise identical shots. */
+* {
+  caret-color: transparent !important;
+}
+
+/*
+  The scrollbar is painted inside the screenshot on Linux and takes a different width per
+  platform, so it moves the entire layout. The gallery pages are sized to avoid scrolling, and
+  this makes the remaining case harmless.
+*/
+html {
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}

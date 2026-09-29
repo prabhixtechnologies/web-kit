@@ -32,6 +32,10 @@ const repo = resolve(pkg, "../../..");
 const TREES = [
   "web-kit/packages/brand/src",
   "web-kit/packages/ui/src",
+  // The gallery is the page the visual tests photograph, so a hex in it would be a hex in the
+  // evidence: a swatch that never changes with the brand, in the one place whose whole job is
+  // to show that everything does.
+  "web-kit/gallery/src",
   "oneOps/web/src",
   "Mailroom/web/src",
   "MobiStack/web/src",

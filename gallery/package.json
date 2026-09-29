@@ -1,0 +1,40 @@
+{
+  "name": "@prabhixtechnologies/gallery",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "//": [
+    "Private and never published. This workspace exists so the primitives can be photographed:",
+    "the rest of the suite runs in jsdom, which has no layout and no paint, and the one bug that",
+    "reached every product was invisible without both. See README.md.",
+    "",
+    "It is a separate workspace rather than a script in packages/ui because it needs Tailwind and",
+    "a browser, and neither belongs in the dependency tree of a package four applications install."
+  ],
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots"
+  },
+  "dependencies": {
+    "@prabhixtechnologies/brand": "*",
+    "@prabhixtechnologies/ui": "*"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@tailwindcss/vite": "4.3.3",
+    "@types/node": "^22.20.4",
+    "@types/pngjs": "^6.0.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "pixelmatch": "^7.1.0",
+    "pngjs": "^7.0.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "^5.8.3",
+    "vite": "^8.3.1"
+  }
+}
