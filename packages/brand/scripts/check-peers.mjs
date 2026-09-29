@@ -45,7 +45,8 @@ const peers = Object.entries(read(uiManifest).peerDependencies ?? {}).filter(
  * Every package.json in a sibling checkout that depends on @prabhixtechnologies/ui.
  *
  * <p>Two levels deep is enough for the layout in use - `oneOps/web`, `Platform/marketing`,
- * `MobiStack/web` - without walking into node_modules or a Flutter tree.
+ * `MobiStack/web` - without walking into node_modules or a Flutter tree. web-kit's own
+ * workspaces are skipped; see the note at the loop.
  */
 function consumers() {
   const found = [];
@@ -62,6 +63,22 @@ function consumers() {
     // Resolved case-insensitively: a runner clones GitHub's spelling, which is not this
     // workspace's for every repo. See siblings.mjs.
     const dir = join(repo, ownerDir(repo, owner));
+
+    // web-kit's own workspaces are not consumers in the sense this gate means. They reach
+    // @prabhixtechnologies/ui as workspace siblings, not through a `file:` link, so npm hoists
+    // its dependencies into web-kit/node_modules and they resolve by walking up - the failure
+    // described above cannot happen there. Without this, the gallery is reported as an app
+    // missing all 27 peers while its tests resolve every one of them and pass.
+    if (resolve(dir) === webKit) continue;
+
+
+    // web-kit's own workspaces are not consumers in the sense this gate means. They reach
+    // @prabhixtechnologies/ui as workspace siblings, not through a `file:` link, so npm hoists
+    // its dependencies into web-kit/node_modules and they resolve by walking up - the failure
+    // described above cannot happen there. Without this, the gallery is reported as an app
+    // missing all 27 peers while its tests resolve every one of them and pass.
+    if (resolve(dir) === webKit) continue;
+
     let children;
     try {
       children = readdirSync(dir, { withFileTypes: true })

@@ -33,9 +33,22 @@ export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
-  retries: 0,
+  /*
+    Two different things can go wrong here and they want opposite treatment.
+
+    A comparison is deterministic. The pages are static CSS and both shots come from the same
+    run, so a brand that renders like another renders like it on every attempt; a retry cannot
+    launder that into a pass.
+
+    The capture is not. `Page.captureScreenshot` returns a protocol error when the renderer is
+    short of memory, and four workers each photographing a 1280x7900 page on a two-core runner
+    is enough to provoke it — one dark-mode test failed that way with the other nineteen green.
+    So: fewer simultaneous captures in CI, and one retry, which recovers a failed capture
+    without being able to hide a difference.
+  */
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI ? [["github"], ["list"]] : [["list"]],
-  // Screenshot comparison is not flaky here, so a retry would only hide a real difference.
   expect: {
     toHaveScreenshot: {
       // Anti-aliasing on a border radius differs by a pixel or two between otherwise identical
