@@ -1,24 +1,23 @@
 {
   "name": "@prabhixtechnologies/oidc-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Browser PKCE client for Prabhix Identity.",
+  "//exports": [
+    "dist, not src, and no publishConfig swapping the two. npm's publishConfig overrides npm",
+    "config values, not package.json fields -- that is a Yarn and pnpm feature -- so the block",
+    "that used to sit here was ignored and 1.0.0 shipped pointing at raw TypeScript. See the",
+    "longer note in packages/ui/package.json. `prepare` below keeps dist present."
+  ],
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "import": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "exports": {
-      ".": {
-        "types": "./dist/index.d.ts",
-        "import": "./dist/index.js",
-        "default": "./dist/index.js"
-      }
-    }
+    "registry": "https://npm.pkg.github.com"
   },
   "files": [
     "src",
@@ -26,6 +25,7 @@
     "!src/**/*.test.ts"
   ],
   "scripts": {
+    "prepare": "tsup",
     "build": "tsup",
     "test": "node --experimental-strip-types --test src/index.test.ts",
     "typecheck": "tsc --noEmit"

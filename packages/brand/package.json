@@ -1,9 +1,17 @@
 {
   "name": "@prabhixtechnologies/brand",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "description": "Prabhix design tokens, Tailwind preset and SVG marks. Token source: tokens.json.",
+  "//scripts": [
+    "`prepare` is tsup alone, not `build`. build also runs build-tokens.mjs, and that generator",
+    "writes into the Identity, Infra and Mobile checkouts when they are siblings of this one --",
+    "which they are on the development machine. npm runs prepare on every install, so wiring",
+    "build here would have quietly rewritten files in three other repositories every time",
+    "anyone typed `npm install`. Compiling src to dist is all that `exports` needs."
+  ],
   "scripts": {
+    "prepare": "tsup",
     "build": "node scripts/build-tokens.mjs && tsup",
     "build:tokens": "node scripts/build-tokens.mjs",
     "check": "node scripts/build-tokens.mjs --check && node scripts/check-literals.mjs && node scripts/check-mojibake.mjs",
@@ -16,11 +24,22 @@
     "prabhix-check-colours": "./scripts/check-literals.mjs",
     "prabhix-check-mojibake": "./scripts/check-mojibake.mjs"
   },
+  "//exports": [
+    "dist for the module entry, not src, and no publishConfig swapping the two. npm's",
+    "publishConfig overrides npm config values, not package.json fields -- that is a Yarn and",
+    "pnpm feature -- so the block that used to sit here was ignored and 1.1.0 shipped pointing at",
+    "raw TypeScript. See the longer note in packages/ui/package.json.",
+    "",
+    "1.1.0 still worked for Platform, which is the only consumer migrated so far, because",
+    "marketing imports only ./tailwind-preset.css. The three subpath entries below are generated",
+    "artefacts and SVGs shipped as they are, so they were never affected -- which is exactly why",
+    "a green build did not reveal this."
+  ],
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "import": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./tokens.json": "./tokens.json",
     "./prabhix-tokens.css": "./prabhix-tokens.css",
@@ -28,18 +47,7 @@
     "./marks/*": "./marks/*"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "exports": {
-      ".": {
-        "types": "./dist/index.d.ts",
-        "import": "./dist/index.js",
-        "default": "./dist/index.js"
-      },
-      "./tokens.json": "./tokens.json",
-      "./prabhix-tokens.css": "./prabhix-tokens.css",
-      "./tailwind-preset.css": "./tailwind-preset.css",
-      "./marks/*": "./marks/*"
-    }
+    "registry": "https://npm.pkg.github.com"
   },
   "files": [
     "dist",

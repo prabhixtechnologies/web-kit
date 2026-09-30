@@ -1,37 +1,38 @@
 {
   "name": "@prabhixtechnologies/ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Shared React UI primitives for Prabhix product webs.",
+  "//exports": [
+    "dist, and there is no publishConfig that swaps it for src.",
+    "",
+    "These three fields used to point at ./src/index.ts with a publishConfig block that pointed",
+    "at ./dist, the idea being that a `file:` link would compile the sources for free while a",
+    "published tarball served compiled output. npm does not do that. Its publishConfig overrides",
+    "npm *config* values -- registry, tag, access, provenance -- and overriding package.json",
+    "fields such as `exports` is a Yarn and pnpm feature. npm ignored the block silently, so",
+    "1.0.0 shipped pointing consumers at raw TypeScript, which Vite's Rollup build does not",
+    "transpile inside node_modules and Next needs `transpilePackages` for. Unpacking the",
+    "published tarball is what showed it; reading this file is what hid it.",
+    "",
+    "One honest value is workable because of `prepare` below. npm runs that after any install",
+    "and before any pack, so dist exists for the gallery, for a typecheck and for a publish",
+    "alike, and the gallery photographs the artefact consumers actually receive.",
+    "",
+    "preset.css deliberately stays on src. It is plain CSS, tsup copies it to dist byte for byte,",
+    "and src ships regardless: Tailwind v4 skips node_modules, so consumers point `@source` at",
+    "this package's src to find the primitives' class names. One tree rather than two."
+  ],
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "import": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./preset.css": "./src/preset.css"
   },
-  "//publishConfig": [
-    "The exports above point at raw TypeScript, which is what a `file:` link wants: the app's",
-    "bundler follows the symlink and compiles the sources, so there is no build to run and no",
-    "dist to go stale while someone edits a primitive.",
-    "",
-    "A published tarball cannot work that way -- Vite's Rollup build does not transpile",
-    "TypeScript inside node_modules, and Next needs the package in `transpilePackages` -- so npm",
-    "rewrites these three fields at pack time to serve the compiled output instead. Local",
-    "development keeps the link and the fast path; consumers installing by version get ordinary",
-    "ESM with declarations. Neither has to know about the other."
-  ],
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "exports": {
-      ".": {
-        "types": "./dist/index.d.ts",
-        "import": "./dist/index.js",
-        "default": "./dist/index.js"
-      },
-      "./preset.css": "./dist/preset.css"
-    }
+    "registry": "https://npm.pkg.github.com"
   },
   "//files": [
     "src is kept alongside dist so the published sourcemaps resolve to real sources when a",
@@ -52,7 +53,15 @@
   "sideEffects": [
     "*.css"
   ],
+  "//scripts": [
+    "`prepare` runs tsup, which is what lets `exports` name dist and only dist. npm runs prepare",
+    "after every install -- including `npm ci` on a runner -- and again before any pack, so no",
+    "workspace here can import this package before it has been compiled, and no publish can ship",
+    "a dist older than src. dist/ is gitignored, so building it on install leaves the tree clean",
+    "and does not trip the \"generated output is committed\" gate in publish.yml."
+  ],
   "scripts": {
+    "prepare": "tsup",
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
