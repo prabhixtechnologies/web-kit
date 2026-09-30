@@ -1,18 +1,20 @@
 name: Publish
 
 # Publishes @prabhixtechnologies/brand, /ui and /oidc-client to GitHub Packages.
-# All three are live at 1.0.0.
+# Live at brand 1.1.1, ui 1.0.1, oidc-client 1.0.1.
 #
-# The seven consuming repositories currently clone this one beside their own checkout at a pinned
-# WEBKIT_REF and compile the sources. That works, and it costs a clone on every CI run plus a pin
-# that has to be bumped by hand in four workflow files every time anything here changes -- which
-# has already gone wrong: the pins went stale, and the apps were tested against a web-kit that was
-# not the one being shipped.
+# All four web apps consume them by version range. They used to clone this repository beside their
+# own checkout at a pinned WEBKIT_REF and compile the sources, which cost a clone on every CI run
+# plus a pin bumped by hand in four workflow files -- and had already gone wrong, the pins going
+# stale so the apps were tested against a web-kit that was not the one being shipped.
 #
-# A version range fixes the pin problem properly, because Dependabot can move it. GitHub Packages
-# rather than S3 for the same reason: a tarball at a URL is still a hand-edited pin in seven
-# repositories, so it would move the chore rather than remove it. Bandwidth from Actions to GitHub
-# Packages is not billed, which matters here -- these repositories are on metered billing.
+# A version range fixed the pin problem properly, because Dependabot can move it. GitHub Packages
+# rather than S3 for the same reason: a tarball at a URL is still a hand-edited pin in several
+# repositories, so it would have moved the chore rather than removed it. Bandwidth from Actions to
+# GitHub Packages is not billed, which matters here -- these repositories are on metered billing.
+#
+# Identity, Infra and Mobile still clone this repository, for the token-sync and colour gates
+# only. They have no npm dependency on it.
 #
 # Releasing is deliberately manual and tag-driven. Publishing on every push to main would make the
 # version meaningless and give consumers no way to stay still while something settles.
