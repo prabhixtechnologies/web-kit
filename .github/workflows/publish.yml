@@ -1,7 +1,7 @@
 name: Publish
 
 # Publishes @prabhixtechnologies/brand, /ui and /oidc-client to GitHub Packages.
-# Live at brand 1.1.1, ui 1.0.1, oidc-client 1.0.1.
+# Live at brand 1.1.1, ui 1.0.1, oidc-client 1.0.2.
 #
 # All four web apps consume them by version range. They used to clone this repository beside their
 # own checkout at a pinned WEBKIT_REF and compile the sources, which cost a clone on every CI run

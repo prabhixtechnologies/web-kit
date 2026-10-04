@@ -222,6 +222,15 @@ export class OidcClient {
   }
 
   /**
+   * Asks Identity for a fresh proof. Staff step-up and a changed network land here: {@code prompt=login}
+   * shows the hosted page again, and {@code max_age=0} tells the provider the existing session is not
+   * fresh enough.
+   */
+  beginStepUp(returnTo?: string): Promise<void> {
+    return this.authorize(returnTo, "login", { max_age: "0" });
+  }
+
+  /**
    * Redeems the code the provider sent back.
    *
    * @throws if `state` does not match what this tab stored, which means the response belongs to a flow
@@ -369,7 +378,11 @@ export class OidcClient {
     form.submit();
   }
 
-  private async authorize(returnTo?: string, prompt?: string): Promise<void> {
+  private async authorize(
+    returnTo?: string,
+    prompt?: string,
+    extra?: Record<string, string>,
+  ): Promise<void> {
     const verifier = randomUrlSafe(64);
     const state = randomUrlSafe(32);
 
@@ -389,6 +402,11 @@ export class OidcClient {
       code_challenge_method: "S256",
     });
     if (prompt) params.set("prompt", prompt);
+    if (extra) {
+      for (const [name, value] of Object.entries(extra)) {
+        params.set(name, value);
+      }
+    }
 
     window.location.assign(`${this.issuer}/oauth2/authorize?${params.toString()}`);
   }
@@ -448,6 +466,10 @@ export function abandonAuthorize(): void {
 
 export function beginSignup(returnTo?: string): Promise<void> {
   return client().beginSignup(returnTo);
+}
+
+export function beginStepUp(returnTo?: string): Promise<void> {
+  return client().beginStepUp(returnTo);
 }
 
 export function completeLogin(search: URLSearchParams): Promise<{ tokens: OidcTokens; returnTo: string }> {

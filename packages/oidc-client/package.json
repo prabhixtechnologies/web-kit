@@ -1,6 +1,6 @@
 {
   "name": "@prabhixtechnologies/oidc-client",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "Browser PKCE client for Prabhix Identity.",
   "//exports": [
