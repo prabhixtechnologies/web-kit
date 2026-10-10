@@ -227,6 +227,11 @@ export class OidcClient {
    * fresh enough.
    */
   beginStepUp(returnTo?: string): Promise<void> {
+    // This page is already the redirect from authorize. Starting another one reloads it for as long
+    // as the cookie exchange keeps asking for a step-up.
+    if (typeof window !== "undefined" && window.location.pathname.startsWith("/auth/callback")) {
+      return Promise.resolve();
+    }
     return this.authorize(returnTo, "login", { max_age: "0" });
   }
 
